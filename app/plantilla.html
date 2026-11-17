@@ -1,161 +1,270 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Prospectos colegios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap">
 <style>
-/* Herramienta de trabajo en cuatro pestañas: colegios para contactar, localidades del padrón, zonas por departamento y competencia. Lista vertical pensada para el celu. */
-:root{--bg:#F6F7F8;--ink:#1B2430;--mute:#5E6B78;--line:#E3E7EA;--ok:#1E7B4F;--warn:#9A5B00;--bad:#B3261E;--info:#2557A7;--new:#7A3FB0;--btn:#1B2430;--btnink:#fff;--box:#ECEFF2;color-scheme:light;
+/* App de celular: una tarjeta por colegio con los datos de contacto y tres botones grandes (WhatsApp, Llamar, Cómo llegar). Barra de secciones fija abajo, al alcance del pulgar. */
+:root{
+--bg:#EEF1F4;--card:#FFFFFF;--ink:#16202B;--mute:#5B6774;--line:#DDE2E8;--soft:#F4F6F8;
+--brand:#1F4FA8;--brandsoft:#E3ECFB;--wa:#1DA851;--waink:#fff;--ok:#1E7B4F;--oksoft:#E2F3EA;--warn:#A35F00;--warnsoft:#FBEFD9;--bad:#B3261E;--badsoft:#FBE4E2;--new:#6D3BB0;--newsoft:#EFE6FA;
+--font:"Figtree","Avenir Next","Segoe UI",system-ui,sans-serif;--r:14px;color-scheme:light;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);background:var(--bg)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14181D;--ink:#E8ECEF;--mute:#9AA7B3;--line:#262D35;--ok:#5CC48D;--warn:#E3A33B;--bad:#F07A72;--info:#7FA9F0;--new:#C4A3F5;--btn:#E8ECEF;--btnink:#14181D;--box:#1D232A;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#14181D;--ink:#E8ECEF;--mute:#9AA7B3;--line:#262D35;--ok:#5CC48D;--warn:#E3A33B;--bad:#F07A72;--info:#7FA9F0;--new:#C4A3F5;--btn:#E8ECEF;--btnink:#14181D;--box:#1D232A;color-scheme:dark}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1419;--card:#1A2129;--ink:#E9EDF1;--mute:#9BA8B5;--line:#2A333D;--soft:#222A33;--brand:#7FA8F2;--brandsoft:#1D2B44;--wa:#2BC266;--waink:#06130B;--ok:#62C892;--oksoft:#163126;--warn:#E8A94A;--warnsoft:#3A2A12;--bad:#F27D74;--badsoft:#3D1D1B;--new:#C5A6F6;--newsoft:#2C2140;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0F1419;--card:#1A2129;--ink:#E9EDF1;--mute:#9BA8B5;--line:#2A333D;--soft:#222A33;--brand:#7FA8F2;--brandsoft:#1D2B44;--wa:#2BC266;--waink:#06130B;--ok:#62C892;--oksoft:#163126;--warn:#E8A94A;--warnsoft:#3A2A12;--bad:#F27D74;--badsoft:#3D1D1B;--new:#C5A6F6;--newsoft:#2C2140;color-scheme:dark}
+*{box-sizing:border-box}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 "Avenir Next","Segoe UI",system-ui,sans-serif;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-main{max-width:640px;margin:0 auto;padding-block:20px 48px}
-h1{font-size:24px;margin:0 0 2px;letter-spacing:-.01em}
-.sum{color:var(--mute);font-size:15px;margin:0 0 4px;font-variant-numeric:tabular-nums}
-.sum b{font-weight:700}
-.st{font-size:13px;font-weight:700;margin:0 0 6px;display:flex;gap:6px;align-items:center}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--font);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-text-size-adjust:100%}
+main{max-width:640px;margin:0 auto;padding-block:18px calc(96px + env(safe-area-inset-bottom,0px))}
+button,select,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+[hidden]{display:none!important}
+
+/* Encabezado */
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+h1{font-size:22px;line-height:1.15;margin:0;font-weight:800;letter-spacing:-.01em}
+.sum{color:var(--mute);font-size:14px;margin:4px 0 0;font-variant-numeric:tabular-nums}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--soft);color:var(--mute);white-space:nowrap;flex:none;max-width:48%;overflow:hidden;text-overflow:ellipsis}
 .st::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
-.tabs{display:flex;gap:18px;position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--bg);padding:8px 0 0;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
-.tabs button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:inherit;font-size:15px;font-weight:700;padding:6px 0 8px;cursor:pointer;white-space:nowrap}
-.tabs button.on{color:var(--ink);border-color:var(--ink)}
-.chips{display:flex;gap:18px;overflow-x:auto;padding:12px 0 6px;scrollbar-width:none}
-.chips button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:inherit;font-size:15px;padding:4px 0;white-space:nowrap;cursor:pointer}
-.chips button.on{color:var(--ink);font-weight:700;border-color:var(--ink)}
-.item{border-left:3px solid var(--c,var(--mute));padding:2px 0 2px 14px;margin:22px 0}
-.top{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.name{font-size:18px;font-weight:700;min-width:0}
-.days{font-size:14px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
-.facts{color:var(--mute);font-size:14px;margin:2px 0 6px;overflow-wrap:anywhere}
-.est{border:0;background:none;font:inherit;font-weight:700;padding:0;color:var(--e,var(--ink));max-width:100%}
-.next{font-size:14px;margin:4px 0 10px}
-.acts{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
-.acts a,.acts button{font:inherit;font-size:15px;color:var(--ink);background:none;border:0;padding:0;text-decoration:underline;cursor:pointer}
-.acts a.wa,.acts button.pri{background:var(--btn);color:var(--btnink);text-decoration:none;padding:7px 14px;border-radius:999px;font-weight:700}
-.acts .del{color:var(--mute);font-size:13px;margin-left:auto}
-.acts .done{color:var(--ok);text-decoration:none;font-weight:700;cursor:default}
-.empty{color:var(--mute);margin:30px 0}
-details{margin:26px 0 0;color:var(--mute)}
-summary{cursor:pointer;font-weight:700;color:var(--ink)}
-.f{display:grid;gap:10px;margin:12px 0}
-.f input,.f select,.srch{font:inherit;padding:9px 0;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);border-radius:0;min-width:0}
-.srch{width:100%;box-sizing:border-box;margin-top:12px}
-.f label{font-size:14px;display:flex;gap:8px;align-items:center}
-.f button{justify-self:start;background:var(--btn);color:var(--btnink);border:0;border-radius:999px;padding:9px 18px;font:inherit;font-weight:700;cursor:pointer}
-.f textarea,.nt{font:inherit;font-size:14px;padding:9px 0;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);resize:vertical;min-width:0}
-.nt{width:100%;box-sizing:border-box;margin-top:10px}
-.note{font-size:13px;color:var(--mute);margin-top:26px}
-.note a{color:var(--ink)}
-.bl{display:flex;gap:16px;flex-wrap:wrap;margin:2px 0}
-.bl a{color:var(--ink);font-size:15px}
-.sel{display:flex;flex-wrap:wrap;gap:6px 16px;margin:2px 0 4px}
-.sel select,.zsel{font:inherit;font-size:14px;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);padding:4px 0;max-width:48%}
-.rs{display:grid;gap:2px;margin-top:10px}
-.rs a,.rs button{font:inherit;font-size:14px;background:none;border:0;border-left:2px solid var(--line);padding:7px 0 7px 12px;text-align:left;color:var(--ink);text-decoration:none;cursor:pointer}
-.box{background:var(--box);border-radius:6px;padding:12px 14px;margin:14px 0;font-size:14px}
-.box ul{margin:6px 0 0;padding-left:18px}
-.box li{margin:4px 0}
-.badge{font-size:12px;font-weight:700;color:var(--info);white-space:nowrap}
-.lk{font-size:14px;margin:2px 0 8px}
-.lk b{font-weight:700}
-.ci{width:100%;box-sizing:border-box}
-.sch{border-top:1px solid var(--line);padding:10px 0;font-size:14px}
-.sch:first-child{border-top:0}
-.sch b{font-size:15px}
-.sch .facts{margin:2px 0 6px}
-.subl{margin:8px 0 4px}
-.num{font-variant-numeric:tabular-nums}
-:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+h2{font-size:18px;margin:26px 0 10px;font-weight:800}
+.lead{color:var(--mute);font-size:14px;margin:-4px 0 12px}
+
+/* Barra de secciones abajo */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-left,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-right,0px));display:flex;justify-content:center}
+.nav div{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;width:100%;max-width:640px}
+.nav button{border:0;background:none;border-radius:12px;padding:6px 2px 5px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:700;color:var(--mute);cursor:pointer}
+.nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav button.on{color:var(--brand);background:var(--brandsoft)}
+
+/* Resumen: cuadros que también filtran */
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{border:2px solid transparent;background:var(--card);border-radius:var(--r);padding:12px 14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px;min-width:0}
+.tile b{font-size:28px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums;color:var(--tc,var(--ink))}
+.tile span{font-size:14px;font-weight:600;color:var(--mute)}
+.tile.on{border-color:var(--brand);background:var(--brandsoft)}
+.all{margin-top:10px;width:100%;border:0;background:none;color:var(--brand);font-weight:700;padding:6px 0;cursor:pointer;text-align:left}
+
+/* Filtros */
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 4px}
+.filters select,.field{width:100%;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:0 12px;margin-bottom:10px}
+.search:focus-within{border-color:var(--brand)}
+.search svg{width:20px;height:20px;stroke:var(--mute);fill:none;stroke-width:2;flex:none}
+.search input{border:0;background:none;padding:13px 0;font-size:16px;width:100%;min-width:0;outline:none}
+.seg{display:flex;gap:8px;overflow-x:auto;padding:4px 0 2px;scrollbar-width:none}
+.seg button{flex:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700;color:var(--mute);cursor:pointer}
+.seg button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.count{font-size:14px;color:var(--mute);margin:14px 2px 0;font-variant-numeric:tabular-nums}
+
+/* Tarjetas */
+.list{display:grid;gap:14px;margin-top:12px}
+.card{background:var(--card);border-radius:var(--r);padding:16px;border-top:5px solid var(--c,var(--line));min-width:0}
+.ch{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ch h3{font-size:19px;line-height:1.25;margin:0;font-weight:800;min-width:0;overflow-wrap:anywhere}
+.where{font-size:14px;color:var(--mute);margin:3px 0 0}
+.when{font-size:13px;font-weight:700;white-space:nowrap;padding:4px 9px;border-radius:999px;background:var(--wbg,var(--soft));color:var(--wc,var(--mute))}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.tag{font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--mute)}
+.tag.ok{background:var(--oksoft);color:var(--ok)}
+.tag.info{background:var(--brandsoft);color:var(--brand)}
+.state{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:14px 0 0}
+.state label{font-size:13px;font-weight:700;color:var(--mute)}
+.est{appearance:none;-webkit-appearance:none;border:0;border-radius:999px;padding:8px 34px 8px 14px;font-weight:800;font-size:15px;background:var(--eb,var(--soft)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 13px center;color:var(--ec,var(--ink));cursor:pointer;max-width:100%}
+.next{font-size:15px;margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--soft)}
+.next b{font-weight:700}
+.contact{margin:14px 0 0;display:grid;gap:6px}
+.phone{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.phone strong{font-size:22px;font-weight:800;letter-spacing:.01em;font-variant-numeric:tabular-nums;user-select:all}
+.phone small{font-size:13px;font-weight:700;color:var(--mute)}
+.copy{border:1px solid var(--line);background:none;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;color:var(--brand);cursor:pointer}
+.line{font-size:15px;color:var(--mute);overflow-wrap:anywhere;margin:0}
+.line a{color:var(--brand)}
+.nophone{font-size:15px;color:var(--mute);font-style:italic;margin:0}
+.big{display:flex;gap:8px;margin:14px 0 0}
+.b{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:52px;border-radius:12px;font-weight:800;font-size:16px;text-decoration:none;border:0;cursor:pointer;padding:0 8px;text-align:center;line-height:1.1}
+.b svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.b.wa{background:var(--wa);color:var(--waink)}
+.b.call{background:var(--brand);color:var(--card)}
+.b.go{background:var(--brandsoft);color:var(--brand)}
+.b.add{background:var(--ink);color:var(--bg)}
+.b.done{background:var(--oksoft);color:var(--ok);cursor:default}
+.small{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 0}
+.sbtn{border:1px solid var(--line);background:none;border-radius:10px;padding:9px 2px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;text-decoration:none;text-align:center;display:flex;align-items:center;justify-content:center;min-height:42px;line-height:1.15}
+.sbtn.on{background:var(--soft)}
+.sbtn.dot::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--brand);margin-left:5px}
+.more{display:flex;justify-content:space-between;align-items:center;margin:12px 0 0;font-size:13px}
+.more a{color:var(--mute)}
+.del{border:0;background:none;color:var(--mute);font-size:13px;text-decoration:underline;cursor:pointer;padding:6px 0}
+.del.sure{color:var(--bad);font-weight:700}
+.panel{margin:12px 0 0;padding:12px;border-radius:12px;background:var(--soft);display:grid;gap:8px}
+.panel p{margin:0;font-size:13px;color:var(--mute)}
+.rsb{display:block;width:100%;text-align:left;border:0;background:var(--card);border-radius:10px;padding:11px 12px;font-size:15px;font-weight:700;text-decoration:none;color:var(--ink);cursor:pointer}
+.panel>*{min-width:0}
+.rsb small{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-weight:400;font-size:13px;color:var(--mute);margin-top:2px;overflow:hidden}
+textarea.nt{width:100%;min-height:110px;border:1px solid var(--line);border-radius:10px;background:var(--card);padding:10px 12px;font-size:15px;resize:vertical}
+.empty{background:var(--card);border-radius:var(--r);padding:22px 18px;text-align:center;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:4px}
+
+/* Números grandes en localidades y zonas */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 0}
+.stat{background:var(--soft);border-radius:10px;padding:8px 10px;min-width:0}
+.stat b{display:block;font-size:22px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;font-weight:600;color:var(--mute)}
+.detail{font-size:14px;color:var(--mute);margin:10px 0 0}
+.schools{margin:12px 0 0;display:grid;gap:10px}
+.school{border:1px solid var(--line);border-radius:12px;padding:12px}
+.school h4{margin:0;font-size:16px;line-height:1.3;font-weight:800;overflow-wrap:anywhere}
+.school .where{margin-top:2px}
+.school .phone strong{font-size:18px}
+.school .big .b{min-height:46px;font-size:15px}
+.zsel{appearance:auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;width:100%}
+
+/* Secciones plegables (agregar, ajustes) */
+details.box{background:var(--card);border-radius:var(--r);margin:12px 0 0}
+details.box summary{list-style:none;cursor:pointer;padding:16px;font-weight:800;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+details.box summary::-webkit-details-marker{display:none}
+details.box summary::after{content:"+";font-size:22px;color:var(--mute);font-weight:600}
+details.box[open] summary::after{content:"–"}
+.form{display:grid;gap:10px;padding:0 16px 16px}
+.form label{font-size:13px;font-weight:700;color:var(--mute);display:grid;gap:4px}
+.form .chk{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--ink);font-weight:600}
+.form .chk input{width:20px;height:20px}
+.form textarea{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:15px;resize:vertical}
+.go-btn{background:var(--ink);color:var(--bg);border:0;border-radius:12px;padding:13px 18px;font-weight:800;font-size:16px;cursor:pointer}
+.msg{font-size:14px;color:var(--ok);font-weight:700;min-height:1em}
+.links{display:flex;gap:16px;flex-wrap:wrap;font-size:15px}
+.links a{color:var(--brand);font-weight:700}
+.note{font-size:13px;color:var(--mute);margin:22px 2px 0}
+.note a{color:var(--brand)}
+.info{background:var(--card);border-radius:var(--r);padding:14px 16px;margin:12px 0 0;font-size:15px}
+.info h3{margin:0 0 6px;font-size:16px;font-weight:800}
+.info ul{margin:0;padding-left:18px}
+.info li{margin:5px 0}
+.kv{display:grid;gap:4px;margin:10px 0 0;font-size:14px}
+.kv b{font-weight:700}
+.compform{display:grid;gap:8px;margin:12px 0 0}
+@media (prefers-reduced-motion:no-preference){.tile,.b,.sbtn,.seg button,.nav button{transition:background-color .15s,border-color .15s,color .15s}}
+@media (min-width:560px){.tiles{grid-template-columns:repeat(4,1fr)}.filters{grid-template-columns:repeat(4,1fr)}}
 </style>
 <main>
-<h1>Promos de egresados</h1>
-<p class="sum" id="sum"></p>
-<p class="st" id="st" style="color:var(--mute)">Abriendo datos…</p>
-<div class="tabs" id="tabs"></div>
+<header class="head">
+<div><h1 id="htitle">Mi lista</h1><p class="sum" id="sum"></p></div>
+<span class="st" id="st">Abriendo…</span>
+</header>
 
+<!-- MI LISTA -->
 <section id="v-colegios">
-<div class="chips" id="chips"></div>
-<div class="sel" id="sel"></div>
-<div id="list"></div>
+<div class="tiles" id="tiles"></div>
+<button class="all" id="allbtn" hidden>Ver todos los colegios</button>
+<div class="filters" id="sel"></div>
+<p class="count" id="ccount"></p>
+<div class="list" id="list"></div>
 
-<details>
-<summary>Buscar colegios en Google</summary>
-<div class="f">
-<input id="bq" value="colegios secundarios" placeholder="Qué buscar (ej: colegios técnicos)">
-<input id="bc" value="Córdoba" placeholder="Localidad">
-<div class="bl"><a id="lm" target="_blank" rel="noopener" href="#">Buscar en Maps</a><a id="lg" target="_blank" rel="noopener" href="#">Buscar en Google</a></div>
-<textarea id="it" rows="5" placeholder="Pegar lista: nombre, nivel, localidad, egresados, teléfono (uno por línea)"></textarea>
-<button id="ib">Importar lista</button>
-<span id="im" class="note" style="margin:0"></span>
+<h2>Agregar y ajustar</h2>
+<details class="box" id="d-add">
+<summary>Agregar un colegio a mano</summary>
+<div class="form">
+<p class="lead" style="margin:0">Para los colegios del padrón usá la sección <b>Buscar</b>: ya traen teléfono, mail y dirección.</p>
+<label>Nombre del colegio<input class="field" id="n" placeholder="Ej: IPEM N.º 294"></label>
+<label>Nivel<select class="field" id="niv"><option>Secundario</option><option>Técnico</option><option>Primario (6.º grado)</option><option>Otro</option></select></label>
+<label>Localidad<input class="field" id="c" value="Córdoba"></label>
+<label>Departamento<select class="field" id="dp"></select></label>
+<label>Dirección<input class="field" id="dr"></label>
+<label>Teléfono con característica<input class="field" id="t" inputmode="tel" placeholder="Ej: 3525429043"></label>
+<span class="chk"><input id="cel" type="checkbox"><label for="cel" style="display:inline;color:var(--ink);font-size:15px">Es celular (activa WhatsApp)</label></span>
+<label>Egresados por año (estimado)<input class="field" id="e" type="number" inputmode="numeric"></label>
+<label>Con quién hablar<input class="field" id="ct" placeholder="Ej: directora, preceptor"></label>
+<label>Cuándo deciden la compra<input class="field" id="dc" placeholder="Ej: marzo"></label>
+<label>Etapa<select class="field" id="et"><option value="">Sin etapa</option><option>Etapa 1</option><option>Etapa 2</option><option>Etapa 3</option><option>Etapa 4</option></select></label>
+<label>Cómo llegó<select class="field" id="o"><option value="prospecto">Prospecto nuevo</option><option value="referido">Referido por otro colegio</option></select></label>
+<button class="go-btn" id="add">Guardar colegio</button>
+<span class="msg" id="addmsg"></span>
 </div>
 </details>
-
-<details>
-<summary>Agregar colegio a mano</summary>
-<div class="f">
-<input id="n" placeholder="Nombre del colegio">
-<select id="niv"><option>Secundario</option><option>Técnico</option><option>Primario (6.º grado)</option><option>Otro</option></select>
-<input id="c" placeholder="Localidad" value="Córdoba">
-<select id="dp"></select>
-<input id="dr" placeholder="Dirección">
-<input id="e" type="number" inputmode="numeric" placeholder="Egresados por año (estimado)">
-<input id="t" inputmode="tel" placeholder="Teléfono con característica (ej: 3525429043)">
-<label><input id="cel" type="checkbox"> Es celular (activa WhatsApp)</label>
-<input id="ct" placeholder="Con quién hablar (ej: directora, preceptor)">
-<input id="dc" placeholder="Cuándo deciden la compra (ej: marzo)">
-<select id="et"><option value="">Etapa de la zona</option><option>Etapa 1</option><option>Etapa 2</option><option>Etapa 3</option><option>Etapa 4</option></select>
-<select id="o"><option value="prospecto">Prospecto nuevo</option><option value="referido">Referido por otro colegio</option></select>
-<button id="add">Guardar colegio</button>
+<details class="box">
+<summary>Pegar una lista de colegios</summary>
+<div class="form">
+<label>Un colegio por línea: nombre, nivel, localidad, egresados, teléfono<textarea id="it" rows="5"></textarea></label>
+<button class="go-btn" id="ib">Importar lista</button>
+<span class="msg" id="im"></span>
+<p class="lead" style="margin:0">Buscar afuera del padrón:</p>
+<label>Qué buscar<input class="field" id="bq" value="colegios secundarios"></label>
+<label>Dónde<input class="field" id="bc" value="Córdoba"></label>
+<div class="links"><a id="lm" target="_blank" rel="noopener" href="#">Buscar en Maps</a><a id="lg" target="_blank" rel="noopener" href="#">Buscar en Google</a></div>
 </div>
 </details>
-
-<details>
-<summary>Ajustes</summary>
-<div class="f">
-<input id="cn" placeholder="Tu nombre">
-<input id="ce" placeholder="Nombre de la fábrica">
-<input id="cl" type="number" inputmode="numeric" placeholder="Días máximos sin hablar">
-<textarea id="rs" rows="9" placeholder="Respuestas rápidas: Título | mensaje (una por línea)"></textarea>
-<button id="ex">Copiar lista para una hoja</button>
-<span id="xm" class="note" style="margin:0"></span>
+<details class="box">
+<summary>Mis datos y mensajes</summary>
+<div class="form">
+<label>Tu nombre (va en los mensajes)<input class="field" id="cn"></label>
+<label>Nombre de la fábrica<input class="field" id="ce"></label>
+<label>Días sin hablar para marcar "para retomar"<input class="field" id="cl" type="number" inputmode="numeric"></label>
+<label>Respuestas rápidas: título | mensaje (una por línea)<textarea id="rs" rows="9"></textarea></label>
+</div>
+</details>
+<details class="box">
+<summary>Pasar la lista a Google Sheets</summary>
+<div class="form">
+<p class="lead" style="margin:0">Copia todos tus colegios. Después pegalo en la celda A1 de una hoja de Google.</p>
+<button class="go-btn" id="ex">Copiar lista</button>
+<span class="msg" id="xm"></span>
 </div>
 </details>
 <p class="note" id="savenote"></p>
 </section>
 
+<!-- BUSCAR (localidades del padrón) -->
 <section id="v-localidades" hidden>
-<input class="srch" id="lq" type="search" placeholder="Buscar localidad o escuela (ej: Bell Ville, IPEM 294)" autocomplete="off">
-<div class="sel"><select id="ld"></select><select id="lo"><option value="eg">Más egresados primero</option><option value="az">Por nombre</option></select></div>
-<div class="chips" id="lchips"></div>
+<div class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="lq" type="search" placeholder="Pueblo, ciudad o escuela" autocomplete="off" aria-label="Buscar pueblo, ciudad o escuela"></div>
+<div class="seg" id="lchips"></div>
+<div class="filters"><select id="ld" aria-label="Departamento"></select><select id="lo" aria-label="Orden"><option value="eg">Más egresados primero</option><option value="az">De la A a la Z</option></select></div>
 <div id="llist"></div>
 <p class="note" id="lnote"></p>
 </section>
 
+<!-- ZONAS -->
 <section id="v-zonas" hidden>
-<div class="chips" id="zchips"></div>
-<div id="zlist"></div>
-<p class="note">Colegios y egresados por departamento: <a href="https://www.cba.gov.ar/wp-content/uploads/2024/02/Estadisticas-educativas-Anuario-2023.pdf" target="_blank" rel="noopener">Anuario de estadísticas educativas 2023</a> (cuadros 4.2 y 4.10), ciclo lectivo 2022, secundaria común sin escuelas técnicas. La línea "En el padrón" cuenta todas las escuelas con secundario del Padrón Oficial, técnicas incluidas, por eso da más. Elegí una etapa por departamento para ordenar la lista de colegios.</p>
+<p class="lead" style="margin:0 0 10px">Los 26 departamentos de Córdoba. Elegí una etapa para cada uno y tu lista se ordena por etapa.</p>
+<div class="seg" id="zchips"></div>
+<div class="list" id="zlist"></div>
+<p class="note">Colegios y egresados: <a href="https://www.cba.gov.ar/wp-content/uploads/2024/02/Estadisticas-educativas-Anuario-2023.pdf" target="_blank" rel="noopener">Anuario de estadísticas educativas 2023</a> (cuadros 4.2 y 4.10), ciclo lectivo 2022, secundaria común sin técnicas. "Escuelas en el padrón" cuenta todas las que tienen secundario, técnicas incluidas, por eso da más.</p>
 </section>
 
+<!-- COMPETENCIA -->
 <section id="v-competencia" hidden>
 <div id="clist"></div>
 </section>
 </main>
+
+<nav class="nav" aria-label="Secciones"><div id="tabs"></div></nav>
+
 <script>
 /* Padrón Oficial de Establecimientos Educativos: escuelas de Córdoba con secundario. Lo genera scripts/armar_app.py */
 var PADRON=/*PADRON*/null;
 var KEY="colegios_v2",OLD="colegios_v1",NL=String.fromCharCode(10),TB=String.fromCharCode(9);
 var EST=["Sin contacto","Contactado","Sin respuesta","Respondió","Interesado","Pidió presupuesto","Volver a contactar","Vendido","Ya tiene proveedor","No le interesa"];
-var COL={"Sin contacto":"var(--new)","Contactado":"var(--info)","Vendido":"var(--ok)","Sin respuesta":"var(--mute)","Respondió":"var(--info)","Interesado":"var(--ok)","Pidió presupuesto":"var(--ok)","Volver a contactar":"var(--warn)","Ya tiene proveedor":"var(--mute)","No le interesa":"var(--mute)"};
+/* Color de cada estado: [texto, fondo] */
+var COL={"Sin contacto":["var(--new)","var(--newsoft)"],"Contactado":["var(--brand)","var(--brandsoft)"],"Sin respuesta":["var(--mute)","var(--soft)"],"Respondió":["var(--brand)","var(--brandsoft)"],"Interesado":["var(--ok)","var(--oksoft)"],"Pidió presupuesto":["var(--ok)","var(--oksoft)"],"Volver a contactar":["var(--warn)","var(--warnsoft)"],"Vendido":["var(--ok)","var(--oksoft)"],"Ya tiene proveedor":["var(--mute)","var(--soft)"],"No le interesa":["var(--mute)","var(--soft)"]};
 var CERRADOS=["No le interesa","Ya tiene proveedor","Vendido"];
 var ETA=["Etapa 1","Etapa 2","Etapa 3","Etapa 4"];
-var TABS=[["colegios","Colegios"],["localidades","Localidades"],["zonas","Zonas"],["competencia","Competencia"]];
+var IC={
+list:'<svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1"/><circle cx="4.5" cy="12" r="1"/><circle cx="4.5" cy="18" r="1"/></svg>',
+search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+map:'<svg viewBox="0 0 24 24"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
+flag:'<svg viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+wa:'<svg viewBox="0 0 24 24"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z"/><path d="M9.5 9.5c.3 2 1.9 3.8 4 4.4l1.2-1.1 1.8.8-.3 1.6c-3.7.2-7.5-3.4-7.6-7l1.6-.4.8 1.8z"/></svg>',
+call:'<svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+go:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
+plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+check:'<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>',
+route:'<svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/></svg>'};
+var TABS=[["colegios","Mi lista","list"],["localidades","Buscar","search"],["zonas","Zonas","map"],["competencia","Competencia","flag"]];
 var TABIDS=TABS.map(function(x){return x[0]});
 var DEF=["¿Cuánto sale? | Gracias por consultar. El precio depende de la prenda (buzo, campera, remera), la tela y la cantidad de egresados. ¿Me pasás cuántos chicos son y qué prendas les interesan? Así te armo un presupuesto.","Mandame el catálogo | ¡Claro! Te paso modelos y precios. ¿Cuántos egresados son este año y para qué mes necesitan la entrega?","¿Quién decide? | ¿Con quién conviene hablar para presentar la propuesta: con la dirección o con la comisión de padres?","Más adelante | Perfecto, sin problema. ¿Te parece si te escribo de nuevo en unas semanas? Cualquier cosa, estoy por acá.","Ya tenemos proveedor | Entiendo, gracias por avisar. ¿Cuándo suelen decidir la compra de la próxima promo? Así te contacto a tiempo."].join(NL);
 /* Departamentos: nombre, colegios, egresados 2022 (anuario), ciudades principales, recorrido */
 var DEP=[["Capital",292,13596,"Córdoba capital",""],["Colón",58,2673,"Jesús María, Villa Allende, Río Ceballos, Unquillo","A"],["Río Cuarto",75,2511,"Río Cuarto","C"],["San Justo",66,2154,"San Francisco","C"],["Punilla",53,1859,"Villa Carlos Paz, Cosquín, La Falda","A"],["General San Martín",36,1448,"Villa María","B"],["Río Segundo",37,1145,"Río Segundo, Pilar","B"],["Unión",37,1118,"Bell Ville","B"],["Santa María",36,1110,"Alta Gracia",""],["Tercero Arriba",36,1078,"Río Tercero",""],["Marcos Juárez",34,871,"Marcos Juárez","B"],["San Javier",17,689,"Villa Dolores",""],["Cruz del Eje",20,617,"Cruz del Eje",""],["Calamuchita",25,581,"Santa Rosa de Calamuchita, Villa General Belgrano",""],["Río Primero",16,576,"Santa Rosa de Río Primero",""],["Juárez Celman",22,566,"La Carlota",""],["Presidente Roque Sáenz Peña",12,401,"Laboulaye",""],["Ischilín",7,356,"Deán Funes",""],["San Alberto",15,322,"Mina Clavero",""],["General Roca",14,295,"Villa Huidobro",""],["Río Seco",5,193,"",""],["Totoral",9,137,"",""],["Tulumba",5,94,"",""],["Minas",2,70,"",""],["Sobremonte",1,47,"",""],["Pocho",2,36,"",""]];
 var DEPM={};DEP.forEach(function(d){DEPM[d[0]]=d});
 var REC={A:"Recorrido A · cerca de la capital",B:"Recorrido B · ruta 9",C:"Recorrido C · grandes del interior"};
-var ZF=[["todas","Todos"],["A","A · cerca de la capital"],["B","B · ruta 9"],["C","C · grandes"]];
+var ZF=[["todas","Todos"],["A","Recorrido A"],["B","Recorrido B"],["C","Recorrido C"]];
 function P(id,nombre,nivel,ciudad,dpto,dir,tel,rating,nres,pid,nota,cue){return{id:id,cue:cue||"",nombre:nombre,nivel:nivel,ciudad:ciudad,dpto:dpto,dir:dir,tel:tel,cel:false,rating:rating,nres:nres,pid:pid,eg:0,origen:"prospecto",etapa:"",contacto:"",decide:"",nota:nota||"",estado:"Sin contacto",ultimo:""}}
 var PRE=[
 P("p01","IPEM N.º 294 Jesús María","Secundario","Jesús María","Colón","C. French 1193","543525429043",null,0,"ChIJQVWhPbxjMpQRi0nILijOgYY","","140448400"),
@@ -178,16 +287,16 @@ var PREM={};PRE.forEach(function(p){PREM[p.id]=p});
 /* Competencia: datos de Google Maps al 13/11/2026 */
 var CP=[
 {id:"c1",nombre:"Forever Egresados",rol:"Especialista · también hace uniformes para empresas",dir:"Juan A. Sarachaga 850",tel:"",telt:"",cel:false,hor:"Lunes a viernes, mañana y tarde",rating:4.6,n:100,pid:"ChIJ5dv5cF2YMpQRiCoFz45E1ug",el:"Atención amable, prendas de prueba para medir talles, entrega a tiempo y muchas formas de pago.",cr:"Una reseña cuenta que lo prometido para febrero llegó a fines de marzo y que la bandera llegó mucho después."},
-{id:"c2",nombre:"Dreamers Egresados",rol:"Especialista",dir:"Juan A. Sarachaga 1252",tel:"543513120965",telt:"+54 351 312-0965",cel:false,hor:"Lunes a viernes, 10 a 18",rating:4.6,n:92,pid:"ChIJ-39XELuZMpQR-U_Zg6wS4Ak",el:"Calidad, diseño, entrega a tiempo y facilidades de pago. Tiene un cliente de Bell Ville.",cr:"Sin quejas en las reseñas visibles."},
-{id:"c3",nombre:"Mi Buzo de Egresados",rol:"Especialista · chico o nuevo",dir:"Mendoza 2123",tel:"543518131935",telt:"+54 351 813-1935",cel:false,hor:"Lunes a viernes, 9 a 18",rating:4.8,n:16,pid:"ChIJA2GpQXqiMpQRoc8X4CwDGhg",el:"El dueño asesora sobre telas, talles y diseño. Buena calidad y plazos cumplidos.",cr:"Sin quejas visibles, pero son solo 16 reseñas."},
-{id:"c4",nombre:"Grad Buzos de Egresados",rol:"Especialista · fabricante",dir:"Juan Carlos Castagnino 2212, local 9",tel:"543513654514",telt:"+54 351 365-4514",cel:false,hor:"Martes y jueves, 10 a 13 y 14 a 17",rating:3.3,n:170,pid:"ChIJIf-rEtiZMpQR_TQVdwcc2Fo",el:"Condiciones claras, plazos cumplidos y tela que no suelta pelusa ni destiñe, según varios cursos.",cr:"Ropa que se encogió y perdió color en menos de dos meses, y entregas tardías en una promo 2026."},
-{id:"c5",nombre:"MASHIPA Egresados",rol:"Especialista",dir:"Julio A. Roca 948",tel:"543517061200",telt:"+54 351 706-1200",cel:false,hor:"Lunes a viernes, 8:30 a 17",rating:3.6,n:163,pid:"ChIJz30xi86ZMpQR3PiOmPzzy1w",el:"Ninguna en las reseñas visibles.",cr:"Un mes de atraso, talles y nombres mal, tela defectuosa o que pica, bordado desteñido y nadie atiende teléfono ni mensajes."},
+{id:"c2",nombre:"Dreamers Egresados",rol:"Especialista",dir:"Juan A. Sarachaga 1252",tel:"543513120965",telt:"0351 312-0965",cel:false,hor:"Lunes a viernes, 10 a 18",rating:4.6,n:92,pid:"ChIJ-39XELuZMpQR-U_Zg6wS4Ak",el:"Calidad, diseño, entrega a tiempo y facilidades de pago. Tiene un cliente de Bell Ville.",cr:"Sin quejas en las reseñas visibles."},
+{id:"c3",nombre:"Mi Buzo de Egresados",rol:"Especialista · chico o nuevo",dir:"Mendoza 2123",tel:"543518131935",telt:"0351 813-1935",cel:false,hor:"Lunes a viernes, 9 a 18",rating:4.8,n:16,pid:"ChIJA2GpQXqiMpQRoc8X4CwDGhg",el:"El dueño asesora sobre telas, talles y diseño. Buena calidad y plazos cumplidos.",cr:"Sin quejas visibles, pero son solo 16 reseñas."},
+{id:"c4",nombre:"Grad Buzos de Egresados",rol:"Especialista · fabricante",dir:"Juan Carlos Castagnino 2212, local 9",tel:"543513654514",telt:"0351 365-4514",cel:false,hor:"Martes y jueves, 10 a 13 y 14 a 17",rating:3.3,n:170,pid:"ChIJIf-rEtiZMpQR_TQVdwcc2Fo",el:"Condiciones claras, plazos cumplidos y tela que no suelta pelusa ni destiñe, según varios cursos.",cr:"Ropa que se encogió y perdió color en menos de dos meses, y entregas tardías en una promo 2026."},
+{id:"c5",nombre:"MASHIPA Egresados",rol:"Especialista",dir:"Julio A. Roca 948",tel:"543517061200",telt:"0351 706-1200",cel:false,hor:"Lunes a viernes, 8:30 a 17",rating:3.6,n:163,pid:"ChIJz30xi86ZMpQR3PiOmPzzy1w",el:"Ninguna en las reseñas visibles.",cr:"Un mes de atraso, talles y nombres mal, tela defectuosa o que pica, bordado desteñido y nadie atiende teléfono ni mensajes."},
 {id:"c6",nombre:"Creaciones Perla",rol:"Relacionado · uniformes escolares",dir:"Juan Antonio Lavalleja 2455",tel:"",telt:"",cel:false,hor:"Lunes a sábado",rating:4.1,n:1402,pid:"ChIJ_6hoN0OYMpQRFxqvbmbcamY",el:"Buena atención y uniformes que duran años.",cr:"Una reseña critica la calidad de las camisas de este año. En febrero y marzo hay mucha gente."},
-{id:"c7",nombre:"Apunto Bordados",rol:"Relacionado · bordados y ropa de trabajo",dir:"Entre Ríos 290",tel:"5493517482847",telt:"+54 9 351 748-2847",cel:true,hor:"Lunes a viernes, 9 a 17:30. Sábado, 9 a 13",rating:4.3,n:81,pid:"ChIJp5lyMJuiMpQRQGovOur6ol8",el:"Buena calidad por el precio en camperas y gorras.",cr:"Reseñas que dicen que arruinaron prendas al bordar y no se hicieron cargo."}];
+{id:"c7",nombre:"Apunto Bordados",rol:"Relacionado · bordados y ropa de trabajo",dir:"Entre Ríos 290",tel:"5493517482847",telt:"351 748-2847 (celular)",cel:true,hor:"Lunes a viernes, 9 a 17:30. Sábado, 9 a 13",rating:4.3,n:81,pid:"ChIJp5lyMJuiMpQRQGovOur6ol8",el:"Buena calidad por el precio en camperas y gorras.",cr:"Reseñas que dicen que arruinaron prendas al bordar y no se hicieron cargo."}];
 var REP=["Lo que más premian: entrega en fecha, pago en cuotas, ayuda para elegir telas y talles, y respuesta rápida.","Lo que más castigan: atrasos de un mes, talles o nombres mal, telas que se encogen o pierden color, y mensajes sin respuesta.","Los dos mejor puntuados (Forever y Dreamers, 4,6) cumplen plazos y ofrecen cuotas. Los dos peor puntuados (Grad 3,3 y Mashipa 3,6) fallan en plazos y errores."];
 var OPO=["Fecha de entrega por escrito y cumplida: es el reclamo más repetido.","Prendas de prueba para medir talles, que se elogia de Forever, y revisión de talles y nombres antes de entregar.","Respuesta rápida por WhatsApp: varias quejas son por no contestar.","Cuotas claras: los mejor puntuados las ofrecen, así que hay que igualarlas.","El interior no está vacío: Dreamers ya tiene un cliente en Bell Ville."];
 var CIN=[["pbuzo","Precio del buzo"],["pcamp","Precio de la campera"],["pmin","Mínimo de prendas"],["pcuo","Seña y cuotas"],["pplz","Plazo de entrega"],["pred","Instagram o web"]];
-var S={items:[],cfg:{nombre:"",empresa:"",limite:30,resp:DEF},f:"todas",open:null,nota:null,dpto:"",nivel:"",etapa:"",ciudad:"",tab:"colegios",zf:"todas",zonas:{},comp:{},cd:null,del:[],lq:"",ld:"",lz:"todas",lo:"eg",lopen:{}};
+var S={items:[],cfg:{nombre:"",empresa:"",limite:30,resp:DEF},f:"todas",open:null,nota:null,borrar:null,dpto:"",nivel:"",etapa:"",ciudad:"",tab:"colegios",zf:"todas",zonas:{},comp:{},cd:null,del:[],lq:"",ld:"",lz:"todas",lo:"eg",lopen:{}};
 
 /* ---------- Padrón: escuelas y localidades ---------- */
 function sinTilde(s){return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim()}
@@ -227,9 +336,9 @@ clearTimeout(timers[path]);timers[path]=setTimeout(function(){var it=find(i.id);
 function borrarItem(id){saveLocal();if(MODO!=="nube")return;var path="colegios/"+String(id);clearTimeout(timers[path]);escribir(path,function(r){return r.delete()});guardarAjustes()}
 function guardarAjustes(espera){saveLocal();if(MODO!=="nube")return;clearTimeout(timers.aj);timers.aj=setTimeout(function(){escribir("ajustes/general",function(r){return r.set(limpio(ajustesDoc()))})},espera||0)}
 function estado(m,cod){MODO=m==="error"?MODO:m;var el=document.getElementById("st"),n=document.getElementById("savenote");
-var t={nube:["Guardado en la nube: lo ves igual desde el celu y la compu","var(--ok)"],conectando:["Conectando con la nube…","var(--mute)"],lento:["La nube tarda en responder. Lo que cargues queda en este navegador.","var(--warn)"],local:["Guardado solo en este navegador","var(--warn)"],error:["No se pudo guardar en la nube"+(cod?" ("+cod+")":"")+". Queda en este navegador.","var(--bad)"]}[m];
-el.textContent=t[0];el.style.color=t[1];
-n.textContent=MODO==="nube"?"Los colegios, notas, estados y ajustes se guardan en la nube de este artifact y se ven desde cualquier dispositivo donde abras el link con tu cuenta. Igual podés pasarlos a Google Sheets con \"Copiar lista para una hoja\".":"Lo que cargues se guarda solo en este navegador. Abrí el link con tu cuenta de Claude iniciada para guardarlo en la nube. Con \"Copiar lista para una hoja\" lo llevás a Google Sheets."}
+var t={nube:["Guardado en la nube","var(--ok)","var(--oksoft)"],conectando:["Conectando…","var(--mute)","var(--soft)"],lento:["Sin conexión con la nube","var(--warn)","var(--warnsoft)"],local:["Solo en este navegador","var(--warn)","var(--warnsoft)"],error:["No se pudo guardar"+(cod?" ("+cod+")":""),"var(--bad)","var(--badsoft)"]}[m];
+el.textContent=t[0];el.style.color=t[1];el.style.background=t[2];
+n.textContent=MODO==="nube"?"Tus colegios, notas, estados y ajustes se guardan en la nube y se ven igual desde el celu y la compu, con tu cuenta de Claude abierta.":"Ahora lo que cargues queda solo en este navegador. Abrí el link con tu cuenta de Claude iniciada para guardarlo en la nube."}
 function editando(){var a=document.activeElement;return a&&(a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&a.type!=="checkbox"))}
 function pintar(){if(editando()){sucio=true;return}render()}
 document.addEventListener("focusout",function(){setTimeout(function(){if(sucio&&!editando()){sucio=false;render()}},50)});
@@ -245,7 +354,7 @@ function aplicarAj(s){var d=s.data()||{};S.cfg=Object.assign({nombre:"",empresa:
 async function arrancar(){LISTO=true;clearTimeout(reloj);
 if(snapAj.exists){aplicarItems(snapItems);aplicarAj(snapAj);saveLocal();estado("nube");pintar();return}
 /* Primera vez: subir lo que había en este navegador (o los 16 colegios iniciales) */
-estado("conectando");document.getElementById("st").textContent="Pasando tus datos a la nube…";
+estado("conectando");document.getElementById("st").textContent="Pasando datos a la nube…";
 try{for(var k=0;k<S.items.length;k++){var it=S.items[k];await DB.doc("colegios/"+String(it.id)).set(limpio(it))}
 await DB.doc("ajustes/general").set(limpio(ajustesDoc()));MODO="nube";estado("nube")}catch(e){console.warn(e);MODO="local";estado("error",e&&e.code)}}
 db.collection("colegios").onSnapshot(function(s){snapItems=s;if(!s.metadata.fromCache)okI=true;
@@ -263,13 +372,17 @@ function fr(n){return String(n).replace(".",",")}
 function days(i){if(!i.ultimo)return null;var t=new Date();t.setHours(0,0,0,0);return Math.round((t-new Date(i.ultimo+"T00:00:00"))/864e5)}
 function retomar(i){var d=days(i);return d!==null&&d>S.cfg.limite&&CERRADOS.indexOf(i.estado)<0}
 function aviso(i){var d=days(i);return d!==null&&d>=S.cfg.limite-10&&d<=S.cfg.limite&&CERRADOS.indexOf(i.estado)<0}
+function caliente(i){return i.estado==="Interesado"||i.estado==="Pidió presupuesto"}
 function et(i){return i.etapa||S.zonas[i.dpto]||""}
-function sig(i){var m={"Sin contacto":"Enviar primer mensaje y preguntar con quién hablar","Contactado":"Esperar respuesta y hacer seguimiento en unos días","Vendido":"Pedirle que te recomiende a un colegio de la zona siguiente","Sin respuesta":i.ultimo?"Enviar seguimiento":"Enviar primer mensaje","Respondió":"Preguntar quién decide la compra y cuándo","Interesado":"Proponer visita o reunión con quien decide","Pidió presupuesto":"Enviar el presupuesto en 24 horas","Volver a contactar":"Retomar el contacto","Ya tiene proveedor":"Preguntar cuándo deciden el próximo año","No le interesa":"Sin acción"};return m[i.estado]||""}
+function sig(i){var m={"Sin contacto":"Mandar el primer mensaje y preguntar con quién hablar","Contactado":"Esperar respuesta y hacer seguimiento en unos días","Vendido":"Pedirle que te recomiende a un colegio de la zona siguiente","Sin respuesta":i.ultimo?"Mandar un seguimiento":"Mandar el primer mensaje","Respondió":"Preguntar quién decide la compra y cuándo","Interesado":"Proponer una visita o reunión con quien decide","Pidió presupuesto":"Mandar el presupuesto en 24 horas","Volver a contactar":"Retomar el contacto","Ya tiene proveedor":"Preguntar cuándo deciden el año que viene","No le interesa":"Nada por ahora"};return m[i.estado]||""}
 function msg(i){var n=S.cfg.nombre||"[tu nombre]",e=S.cfg.empresa||"[tu fábrica]";
 if(i.ultimo)return"Hola, soy "+n+" de "+e+". Te escribí hace unos días por la promo de egresados de "+i.nombre+". ¿Lo pudieron ver o prefieren que llame en algún horario? ¡Gracias!";
 return"Hola, soy "+n+" de "+e+". Hacemos buzos, camperas y ropa para promos de egresados. Quería consultar con quién puedo hablar en "+i.nombre+" para presentarles opciones y precios sin compromiso. Si no corresponde por este medio, avisame y no te molesto más. ¡Gracias!"}
-function num(i){var d=String(i.tel||"").replace(/\D/g,"").replace(/^0+/,"");if(d.indexOf("549")===0)return d;if(d.indexOf("54")===0)d=d.slice(2);return"549"+d}
-function th(t){t=String(t||"").replace(/\D/g,"");return"tel:"+(t.indexOf("54")===0?"+":"")+t}
+function digitos(t){var d=String(t||"").replace(/\D/g,"").replace(/^0+/,"");if(d.indexOf("549")===0)d=d.slice(3);else if(d.indexOf("54")===0)d=d.slice(2);return d}
+/* Teléfono para leer: 0351 481-1258 */
+function telLindo(t){var d=digitos(t);if(d.length!==10)return d;return"0"+d.slice(0,3)+" "+d.slice(3,6)+"-"+d.slice(6)}
+function num(i){return"549"+digitos(i.tel)}
+function th(t){return"tel:+54"+digitos(t)}
 function wa(i){return"https://wa.me/"+num(i)+"?text="+encodeURIComponent(msg(i))}
 function waR(i,m){return"https://wa.me/"+num(i)+"?text="+encodeURIComponent(m)}
 function mapq(nombre,dir,ciudad){return encodeURIComponent([nombre,dir,ciudad].filter(Boolean).join(" "))}
@@ -279,49 +392,64 @@ function dirUrl(nombre,dir,ciudad,pid){return"https://www.google.com/maps/dir/?a
 function rutaUrl(lista){var q=lista.slice(0,10).map(function(e){return[e.nombre,e.dir,e.loc||e.ciudad,"Córdoba"].filter(Boolean).join(", ")});
 var dest=q.pop();return"https://www.google.com/maps/dir/?api=1&travelmode=driving&destination="+encodeURIComponent(dest)+(q.length?"&waypoints="+encodeURIComponent(q.join("|")):"")}
 function reps(){return String(S.cfg.resp||"").split(NL).map(function(l){var k=l.indexOf("|");return k<0?null:{t:l.slice(0,k).trim(),m:l.slice(k+1).trim()}}).filter(function(x){return x&&x.t&&x.m})}
-function rsHtml(i){return'<div class="rs">'+reps().map(function(r,k){return i.cel?'<a target="_blank" rel="noopener" href="'+waR(i,r.m)+'">'+esc(r.t)+'</a>':'<button data-a="copy" data-id="'+esc(i.id)+'" data-k="'+k+'">'+esc(r.t)+' (copiar)</button>'}).join("")+"</div>"}
-function copiar(txt,el,ok){try{navigator.clipboard.writeText(txt).then(function(){el.textContent=ok},function(){el.textContent="No pude copiar desde acá."})}catch(x){el.textContent="No pude copiar desde acá."}}
+function copiar(txt,el,ok){var vuelta=el.textContent;try{navigator.clipboard.writeText(txt).then(function(){el.textContent=ok;if(el.classList.contains("copy")||el.classList.contains("rsb"))setTimeout(function(){el.innerHTML=el.dataset.html||vuelta},1800)},function(){el.textContent="No pude copiar"})}catch(x){el.textContent="No pude copiar"}}
 function enLista(cue){return S.items.some(function(i){return i.cue===cue})}
 function desdePadron(e){return{id:"cue"+e.cue,cue:e.cue,nombre:e.nombre,nivel:e.tec?"Técnico":"Secundario",ciudad:e.loc,dpto:e.dpto,dir:e.dir,tel:e.tel,cel:!!e.cel,mail:e.mail,sector:e.priv?"Privado":"Público",rural:!!e.rural,pid:"",rating:null,nres:0,eg:egEsc(e),origen:"prospecto",etapa:"",contacto:"",decide:"",nota:"",estado:"Sin contacto",ultimo:""}}
 function agregar(e){if(enLista(e.cue))return false;var it=desdePadron(e);S.del=S.del.filter(function(x){return x!==it.id});S.items.push(it);guardarItem(it);return true}
+/* Bloque de contacto: número grande, botón copiar y los tres botones principales */
+function contacto(o){var h='<div class="contact">';
+if(o.tel){h+='<div class="phone"><strong>'+esc(telLindo(o.tel))+"</strong><small>"+(o.cel?"celular":"fijo")+'</small><button class="copy" data-a="cp" data-v="'+esc(telLindo(o.tel))+'">Copiar</button></div>'}
+else h+='<p class="nophone">Sin teléfono cargado</p>';
+if(o.mail)h+='<p class="line">'+esc(o.mail)+' <button class="copy" data-a="cp" data-v="'+esc(o.mail)+'">Copiar</button></p>';
+if(o.dir)h+='<p class="line">'+esc(o.dir)+"</p>";
+h+='</div><div class="big">';
+if(o.cel&&o.wa)h+='<a class="b wa" target="_blank" rel="noopener" href="'+o.wa+'">'+IC.wa+"WhatsApp</a>";
+if(o.tel)h+='<a class="b call" href="'+th(o.tel)+'">'+IC.call+"Llamar</a>";
+h+='<a class="b go" target="_blank" rel="noopener" href="'+o.go+'">'+IC.go+(o.tel&&o.cel&&o.wa?"Ir":"Cómo llegar")+"</a></div>";
+return h}
 
 /* ---------- Pantallas ---------- */
-var FIL=[["todas","Todos"],["retomar","Para retomar"],["calientes","Calientes"],["nuevas","Sin contactar"],["referido","Referidos"],["vendido","Vendidos"]];
-function pass(i){var f=S.f;if(S.dpto&&i.dpto!==S.dpto)return false;if(S.ciudad&&i.ciudad!==S.ciudad)return false;if(S.nivel&&i.nivel!==S.nivel)return false;if(S.etapa&&et(i)!==S.etapa)return false;if(f==="retomar")return retomar(i);if(f==="calientes")return i.estado==="Interesado"||i.estado==="Pidió presupuesto";if(f==="nuevas")return!i.ultimo;if(f==="referido")return i.origen==="referido";if(f==="vendido")return i.estado==="Vendido";return true}
-function sum(){var el=document.getElementById("sum");
-if(S.tab==="zonas"){el.innerHTML="Interior: 640 colegios · 20.947 egresados por año · Capital: 292 colegios · 13.596 egresados";return}
-if(S.tab==="localidades"){el.innerHTML=PADRON?fm(ESC.length)+" escuelas con secundario en "+fm(LOC.length)+" localidades · padrón al "+esc(PADRON.fecha):"Falta cargar el padrón";return}
-if(S.tab==="competencia"){el.innerHTML="5 especialistas en la capital · datos de Google Maps al 13/11/2026";return}
-var n=S.items.filter(retomar).length;el.innerHTML=S.items.length+" colegios en tu lista · "+(n?'<b style="color:var(--bad)">'+n+" para retomar</b>":"ninguno para retomar")}
-function rTabs(){document.getElementById("tabs").innerHTML=TABS.map(function(x){return'<button data-t="'+x[0]+'" class="'+(S.tab===x[0]?"on":"")+'">'+x[1]+"</button>"}).join("");
+var FIL=[["retomar","Para retomar","var(--bad)",retomar],["calientes","Interesados","var(--ok)",caliente],["nuevas","Sin contactar","var(--new)",function(i){return!i.ultimo}],["vendido","Vendidos","var(--brand)",function(i){return i.estado==="Vendido"}]];
+function pass(i){if(S.dpto&&i.dpto!==S.dpto)return false;if(S.ciudad&&i.ciudad!==S.ciudad)return false;if(S.nivel&&i.nivel!==S.nivel)return false;if(S.etapa&&et(i)!==S.etapa)return false;
+var f=FIL.filter(function(x){return x[0]===S.f})[0];return f?f[3](i):true}
+function sum(){var el=document.getElementById("sum"),t=document.getElementById("htitle");
+t.textContent={colegios:"Mi lista",localidades:"Buscar colegios",zonas:"Zonas",competencia:"Competencia"}[S.tab];
+if(S.tab==="zonas"){el.textContent="Interior: 640 colegios y 20.947 egresados por año";return}
+if(S.tab==="localidades"){el.textContent=PADRON?fm(ESC.length)+" escuelas en "+fm(LOC.length)+" localidades":"Falta cargar el padrón";return}
+if(S.tab==="competencia"){el.textContent="Fábricas de egresados en Córdoba capital";return}
+el.textContent=S.items.length+(S.items.length===1?" colegio":" colegios")+" en tu lista"}
+function rTabs(){document.getElementById("tabs").innerHTML=TABS.map(function(x){return'<button data-t="'+x[0]+'" class="'+(S.tab===x[0]?"on":"")+'"'+(S.tab===x[0]?' aria-current="page"':"")+">"+IC[x[2]]+x[1]+"</button>"}).join("");
 TABS.forEach(function(x){document.getElementById("v-"+x[0]).hidden=S.tab!==x[0]})}
 function rCol(){
-document.getElementById("chips").innerHTML=FIL.map(function(x){return'<button data-f="'+x[0]+'" class="'+(S.f===x[0]?"on":"")+'">'+x[1]+"</button>"}).join("");
+document.getElementById("tiles").innerHTML=FIL.map(function(x){var n=S.items.filter(x[3]).length;return'<button class="tile'+(S.f===x[0]?" on":"")+'" data-f="'+x[0]+'" style="--tc:'+(n?x[2]:"var(--mute)")+'"><b>'+n+"</b><span>"+x[1]+"</span></button>"}).join("");
+document.getElementById("allbtn").hidden=S.f==="todas";
 function uniq(k,filtro){var o={};S.items.forEach(function(i){if(i[k]&&(!filtro||filtro(i)))o[i[k]]=1});return Object.keys(o).sort(function(a,b){return a.localeCompare(b)})}
-var sel=function(k,lab,v,list){return'<select data-s="'+k+'"><option value="">'+lab+'</option>'+(list||uniq(k)).map(function(x){return'<option'+(x===v?" selected":"")+' value="'+esc(x)+'">'+esc(x)+"</option>"}).join("")+"</select>"};
-document.getElementById("sel").innerHTML=sel("dpto","Todos los departamentos",S.dpto)+sel("ciudad","Todas las localidades",S.ciudad,uniq("ciudad",function(i){return!S.dpto||i.dpto===S.dpto}))+sel("nivel","Todos los niveles",S.nivel)+sel("etapa","Todas las etapas",S.etapa,ETA);
-var arr=S.items.filter(pass).sort(function(a,b){var ea=et(a)||"~",eb=et(b)||"~";if(ea!==eb)return ea<eb?-1:1;return(b.eg||0)-(a.eg||0)||String(a.nombre).localeCompare(String(b.nombre))});
-document.getElementById("list").innerHTML=arr.length?arr.map(function(i){var id=esc(i.id);
-var d=days(i),dc=retomar(i)?"var(--bad)":aviso(i)?"var(--warn)":(d===null?"var(--new)":"var(--info)"),dt=d===null?"Sin contacto":d===0?"Hoy":"hace "+d+" días";
-var bar=retomar(i)?"var(--bad)":!i.ultimo?"var(--new)":COL[i.estado];
-var ops=EST.map(function(s){return'<option'+(s===i.estado?" selected":"")+">"+s+"</option>"}).join("");
-var facts=[i.nivel+(i.sector?" "+i.sector.toLowerCase():""),i.ciudad+(i.dpto&&i.dpto!==i.ciudad?" ("+i.dpto+")":""),i.rating?"puntaje "+fr(i.rating)+" ("+i.nres+" reseñas)":"",i.eg?"unos "+i.eg+" egresados (estimado)":"egresados sin confirmar",et(i),i.contacto?"hablar con "+i.contacto:"",i.decide?"decide en "+i.decide:"",i.origen==="referido"?"referido":""].filter(Boolean).map(esc).join(", ");
-var tel=i.tel?String(i.tel).replace(/^54/,""):"";
-var extra=[i.dir,tel?"Tel. "+tel+(i.cel?" (celular)":""):"",i.mail].filter(Boolean).map(esc).join("<br>");
-var notaCorta=i.nota&&String(i.id).charAt(0)==="p"&&!i.ultimo&&(i.nota.indexOf("Confirmar")===0||i.nota.indexOf("En Solís")===0||i.nota.indexOf("Según")===0);
-return'<div class="item" style="--c:'+bar+'"><div class="top"><span class="name">'+esc(i.nombre)+'</span><span class="days" style="color:'+dc+'">'+dt+'</span></div>'
-+'<div class="facts">'+facts+(extra?"<br>"+extra:"")+(notaCorta?"<br>"+esc(i.nota):"")+(i.cue?'<br><span class="badge">En el padrón oficial</span>':"")+"</div>"
-+'<select class="est" data-id="'+id+'" style="--e:'+COL[i.estado]+'">'+ops+"</select>"
-+'<div class="next">Siguiente: '+esc(sig(i))+"</div>"
-+'<div class="acts">'+(i.cel?'<a class="wa" target="_blank" rel="noopener" href="'+wa(i)+'">WhatsApp</a>':"")
-+(i.tel?'<a href="'+th(i.tel)+'">Llamar</a>':"")
-+'<a target="_blank" rel="noopener" href="'+dirUrl(i.nombre,i.dir,i.ciudad,i.pid)+'">Cómo llegar</a>'
-+'<a target="_blank" rel="noopener" href="'+mapUrl(i.nombre,i.dir,i.ciudad,i.pid)+'">Ver en Maps</a>'
-+'<button data-a="rs" data-id="'+id+'">Respuestas</button><button data-a="nt" data-id="'+id+'">Notas'+(i.nota?" •":"")+'</button><button data-a="hoy" data-id="'+id+'">Contacté hoy</button><button class="del" data-a="del" data-id="'+id+'">borrar</button></div>'
-+(S.open===String(i.id)?rsHtml(i):"")
-+(S.nota===String(i.id)?'<textarea class="nt" id="nt'+id+'" data-id="'+id+'" rows="4" placeholder="Notas de la charla: quién decide, qué pagan, proveedor actual...">'+esc(i.nota||"")+"</textarea>":"")+'</div>'}).join(""):'<p class="empty">No hay colegios en esta vista. Sumalos desde la pestaña Localidades.</p>';
+var sel=function(k,lab,v,list){return'<select data-s="'+k+'" aria-label="'+lab+'"><option value="">'+lab+'</option>'+(list||uniq(k)).map(function(x){return'<option'+(x===v?" selected":"")+' value="'+esc(x)+'">'+esc(x)+"</option>"}).join("")+"</select>"};
+document.getElementById("sel").innerHTML=sel("dpto","Departamento",S.dpto)+sel("ciudad","Localidad",S.ciudad,uniq("ciudad",function(i){return!S.dpto||i.dpto===S.dpto}))+sel("nivel","Nivel",S.nivel)+sel("etapa","Etapa",S.etapa,ETA);
+var arr=S.items.filter(pass).sort(function(a,b){var ra=retomar(a)?0:1,rb=retomar(b)?0:1;if(ra!==rb)return ra-rb;var ea=et(a)||"~",eb=et(b)||"~";if(ea!==eb)return ea<eb?-1:1;return(b.eg||0)-(a.eg||0)||String(a.nombre).localeCompare(String(b.nombre))});
+var filtrado=S.f!=="todas"||S.dpto||S.ciudad||S.nivel||S.etapa;
+document.getElementById("ccount").textContent=filtrado?"Mostrando "+arr.length+" de "+S.items.length:"";
+document.getElementById("list").innerHTML=arr.length?arr.map(card).join(""):'<div class="empty"><b>No hay colegios en esta vista</b>Probá con otro filtro, o sumá colegios desde la sección Buscar.</div>';
 var fv=function(id,v){var el=document.getElementById(id);if(document.activeElement!==el)el.value=v};
 fv("cn",S.cfg.nombre);fv("ce",S.cfg.empresa);fv("cl",S.cfg.limite);fv("rs",S.cfg.resp)}
+function card(i){var id=esc(i.id),d=days(i),c=COL[i.estado]||COL["Sin contacto"];
+var when=d===null?["Sin contacto","var(--new)","var(--newsoft)"]:retomar(i)?["hace "+d+" días","var(--bad)","var(--badsoft)"]:aviso(i)?["hace "+d+" días","var(--warn)","var(--warnsoft)"]:[d===0?"Hablaste hoy":d===1?"Ayer":"hace "+d+" días","var(--brand)","var(--brandsoft)"];
+var bar=retomar(i)?"var(--bad)":c[0];
+var tags=[[i.nivel+(i.sector?" "+i.sector.toLowerCase():""),""],[i.eg?"~"+i.eg+" egresados":"",""],[et(i),"info"],[i.rating?"★ "+fr(i.rating)+" ("+i.nres+")":"",""],[i.origen==="referido"?"Referido":"","info"],[i.cue?"En el padrón":"","ok"]].filter(function(x){return x[0]});
+var quien=[i.contacto?"Hablar con "+i.contacto:"",i.decide?"deciden en "+i.decide:""].filter(Boolean).join(" · ");
+var ops=EST.map(function(s){return'<option'+(s===i.estado?" selected":"")+">"+s+"</option>"}).join("");
+var aviso2=i.nota&&String(i.id).charAt(0)==="p"&&!i.ultimo&&/^(Confirmar|En Solís|Según)/.test(i.nota)?'<p class="line" style="margin-top:8px;color:var(--warn)">'+esc(i.nota)+"</p>":"";
+var h='<article class="card" style="--c:'+bar+'">'
++'<div class="ch"><div style="min-width:0"><h3>'+esc(i.nombre)+'</h3><p class="where">'+esc(i.ciudad)+(i.dpto&&i.dpto!==i.ciudad?" · "+esc(i.dpto):"")+'</p></div><span class="when" style="--wc:'+when[1]+";--wbg:"+when[2]+'">'+when[0]+"</span></div>"
++'<div class="tags">'+tags.map(function(x){return'<span class="tag '+x[1]+'">'+esc(x[0])+"</span>"}).join("")+"</div>"+aviso2
++'<div class="state"><label for="es-'+id+'">Estado</label><select class="est" id="es-'+id+'" data-id="'+id+'" style="--ec:'+c[0]+";--eb:"+c[1]+'">'+ops+"</select></div>"
++'<p class="next"><b>Próximo paso:</b> '+esc(sig(i))+(quien?"<br>"+esc(quien):"")+"</p>"
++contacto({tel:i.tel,cel:i.cel,mail:i.mail,dir:i.dir,wa:wa(i),go:dirUrl(i.nombre,i.dir,i.ciudad,i.pid)})
++'<div class="small"><button class="sbtn'+(S.open===String(i.id)?" on":"")+'" data-a="rs" data-id="'+id+'">Respuestas</button><button class="sbtn'+(S.nota===String(i.id)?" on":"")+(i.nota?" dot":"")+'" data-a="nt" data-id="'+id+'">Notas</button><button class="sbtn" data-a="hoy" data-id="'+id+'">Hablé hoy</button><a class="sbtn" target="_blank" rel="noopener" href="'+mapUrl(i.nombre,i.dir,i.ciudad,i.pid)+'">Ver en Maps</a></div>';
+if(S.open===String(i.id))h+='<div class="panel"><p>'+(i.cel?"Tocá una y se abre WhatsApp con el mensaje escrito.":"No es celular: tocá una para copiar el mensaje.")+"</p>"+reps().map(function(r,k){var inner=esc(r.t)+"<small>"+esc(r.m)+"</small>";return i.cel?'<a class="rsb" target="_blank" rel="noopener" href="'+waR(i,r.m)+'">'+inner+"</a>":'<button class="rsb" data-a="copy" data-k="'+k+'" data-html="'+esc(inner)+'">'+inner+"</button>"}).join("")+"</div>";
+if(S.nota===String(i.id))h+='<div class="panel"><textarea class="nt" id="nt'+id+'" data-id="'+id+'" placeholder="Quién decide, cuántos egresados, qué proveedor tienen, cuánto pagaron...">'+esc(i.nota||"")+"</textarea><p>Se guarda solo mientras escribís.</p></div>";
+h+='<div class="more"><span></span><button class="del'+(S.borrar===String(i.id)?" sure":"")+'" data-a="del" data-id="'+id+'">'+(S.borrar===String(i.id)?"Tocá de nuevo para borrar":"Borrar de mi lista")+"</button></div>";
+return h+"</article>"}
 function locPass(l){if(S.ld&&l.dpto!==S.ld)return false;if(S.lz!=="todas"&&l.rec!==S.lz)return false;return true}
 function rLoc(){
 document.getElementById("lchips").innerHTML=ZF.map(function(x){return'<button data-lz="'+x[0]+'" class="'+(S.lz===x[0]?"on":"")+'">'+x[1]+"</button>"}).join("");
@@ -329,61 +457,65 @@ var ld=document.getElementById("ld");if(!ld.options.length)ld.innerHTML='<option
 ld.value=S.ld;document.getElementById("lo").value=S.lo;
 var lq=document.getElementById("lq");if(document.activeElement!==lq)lq.value=S.lq;
 var q=sinTilde(S.lq),arr=[];
-LOC.forEach(function(l){if(!locPass(l))return;var esc2=l.esc,match=null;
+LOC.forEach(function(l){if(!locPass(l))return;var match=null;
 if(q){if(l.key.indexOf(q)>=0||sinTilde(l.dpto).indexOf(q)>=0)match=null;else{match=l.esc.filter(function(e){return sinTilde(e.nombre+" "+e.cue).indexOf(q)>=0||sinTilde(e.nombre).replace(/[.\s]/g,"").indexOf(q.replace(/[.\s]/g,""))>=0});if(!match.length)return}}
 arr.push({l:l,match:match})});
 arr.sort(function(a,b){return S.lo==="az"?a.l.loc.localeCompare(b.l.loc):(b.l.eg-a.l.eg)||(b.l.esc.length-a.l.esc.length)||a.l.loc.localeCompare(b.l.loc)});
 var tot=arr.reduce(function(s,x){return s+(x.match?x.match.length:x.l.esc.length)},0),teg=arr.reduce(function(s,x){return s+x.l.eg},0);
-var MAX=80,cut=arr.length>MAX&&!q;
-var h='<p class="note" style="margin:10px 0 0">'+fm(arr.length)+" localidades · "+fm(tot)+" escuelas"+(q?"":" · unos "+fm(teg)+" egresados por año (estimado)")+(cut?" · se muestran las "+MAX+" primeras":"")+"</p>";
-h+=arr.slice(0,cut?MAX:arr.length).map(function(x){var l=x.l,abierta=!!x.match||S.lopen[l.k],lista=x.match||l.esc;
-var ya=l.esc.filter(function(e){return enLista(e.cue)}).length;
-var partes=[l.esc.length+(l.esc.length===1?" escuela":" escuelas")+" con secundario",l.priv?l.priv+(l.priv===1?" privada":" privadas"):"",l.tec?l.tec+(l.tec===1?" técnica":" técnicas"):"",l.rural?l.rural+(l.rural===1?" rural":" rurales"):"",l.prim?l.prim+" con primaria":""].filter(Boolean).join(" · ");
-var o='<div class="item" style="--c:'+(ya?"var(--ok)":l.rec?"var(--info)":"var(--mute)")+'"><div class="top"><span class="name">'+esc(l.loc)+'</span><span class="days num">'+(l.eg?"~"+fm(l.eg)+" egr.":"")+"</span></div>"
-+'<div class="facts">'+esc(l.dpto)+(l.rec?' · <span class="badge">'+esc(REC[l.rec])+"</span>":"")+"<br>"+partes+"</div>"
-+'<div class="next">'+(ya?ya+" en tu lista":"Ninguna en tu lista todavía")+(l.eg?" · unos "+fm(l.eg)+" egresados por año (estimado)":"")+"</div>"
-+'<div class="acts"><button data-a="lo" data-k="'+esc(l.k)+'">'+(abierta&&!x.match?"Ocultar escuelas":"Ver escuelas")+'</button><a target="_blank" rel="noopener" href="'+rutaUrl(lista)+'">Recorrido en Maps</a>'
-+(ya<l.esc.length?'<button data-a="la" data-k="'+esc(l.k)+'">Agregar '+(l.esc.length-ya===1?"la que falta":"las "+(l.esc.length-ya))+" a mi lista</button>":"")+"</div>";
-if(abierta){o+='<div class="subl">'+lista.map(function(e){var tipo=[e.priv?"Privada":"Pública",e.tec?"técnica":"",e.rural?"rural":""].filter(Boolean).join(", ");
-return'<div class="sch"><b>'+esc(e.nombre)+'</b><div class="facts">'+esc(tipo)+(egEsc(e)?" · unos "+egEsc(e)+" egresados (estimado)":"")+"<br>"+esc(e.dir)+(e.telo&&e.telo!=="0 0"?"<br>Tel. "+esc(e.telo)+(e.cel?" (celular)":""):"")+(e.mail?"<br>"+esc(e.mail):"")+"</div>"
-+'<div class="acts">'+(enLista(e.cue)?'<span class="done">En tu lista</span>':'<button class="pri" data-a="le" data-c="'+esc(e.cue)+'">Agregar a mi lista</button>')
-+'<a target="_blank" rel="noopener" href="'+mapUrl(e.nombre,e.dir,e.loc+" Córdoba","")+'">Ver en Maps</a></div></div>'}).join("")+"</div>"}
-return o+"</div>"}).join("");
-if(!arr.length)h+='<p class="empty">No encontré localidades ni escuelas con esa búsqueda.</p>';
+var MAX=60,cut=arr.length>MAX&&!q;
+var h='<p class="count">'+fm(arr.length)+(arr.length===1?" localidad":" localidades")+" · "+fm(tot)+" escuelas"+(q?"":" · ~"+fm(teg)+" egresados por año")+(cut?". Se ven las "+MAX+" más grandes: buscá o filtrá para ver otras.":"")+"</p>";
+h+='<div class="list">'+arr.slice(0,cut?MAX:arr.length).map(function(x){var l=x.l,abierta=!!x.match||S.lopen[l.k],lista=x.match||l.esc;
+var ya=l.esc.filter(function(e){return enLista(e.cue)}).length,faltan=l.esc.length-ya;
+var det=[l.priv?l.priv+(l.priv===1?" privada":" privadas"):"",l.tec?l.tec+(l.tec===1?" técnica":" técnicas"):"",l.rural?l.rural+(l.rural===1?" rural":" rurales"):"",l.prim?l.prim+" primarias (6.º grado)":""].filter(Boolean).join(" · ");
+var o='<article class="card" style="--c:'+(ya?"var(--ok)":l.rec?"var(--brand)":"var(--line)")+'"><div class="ch"><div style="min-width:0"><h3>'+esc(l.loc)+'</h3><p class="where">'+esc(l.dpto)+"</p></div>"+(l.rec?'<span class="when" style="--wc:var(--brand);--wbg:var(--brandsoft)">Recorrido '+l.rec+"</span>":"")+"</div>"
++'<div class="stats"><div class="stat"><b>'+l.esc.length+"</b><span>escuelas</span></div><div class=\"stat\"><b>"+(l.eg?"~"+fm(l.eg):"–")+'</b><span>egresados/año</span></div><div class="stat"><b style="color:'+(ya?"var(--ok)":"var(--mute)")+'">'+ya+"</b><span>en tu lista</span></div></div>"
++(det?'<p class="detail">'+det+"</p>":"")
++'<div class="big"><button class="b '+(abierta&&!x.match?"go":"add")+'" data-a="lo" data-k="'+esc(l.k)+'">'+(x.match?"Escuelas encontradas":abierta?"Ocultar escuelas":"Ver escuelas")+'</button><a class="b go" target="_blank" rel="noopener" href="'+rutaUrl(lista)+'">'+IC.route+"Recorrido</a></div>";
+if(abierta){o+='<div class="schools">'+lista.map(function(e){var tipo=[e.priv?"Privada":"Pública",e.tec?"técnica":"",e.rural?"rural":"",egEsc(e)?"~"+egEsc(e)+" egresados":""].filter(Boolean).join(" · ");
+var esta=enLista(e.cue);
+return'<div class="school"><h4>'+esc(e.nombre)+'</h4><p class="where">'+esc(tipo)+"</p>"
++contacto({tel:e.tel,cel:e.cel,mail:e.mail,dir:e.dir,wa:"https://wa.me/549"+digitos(e.tel),go:dirUrl(e.nombre,e.dir,e.loc+" Córdoba","")}).replace('<div class="big">','<div class="big">'+(esta?'<span class="b done">'+IC.check+"En tu lista</span>":'<button class="b add" data-a="le" data-c="'+esc(e.cue)+'">'+IC.plus+"Agregar</button>"))
++"</div>"}).join("")+"</div>";
+if(faltan>1)o+='<div class="big"><button class="b add" data-a="la" data-k="'+esc(l.k)+'">'+IC.plus+"Agregar las "+faltan+" que faltan</button></div>"}
+return o+"</article>"}).join("")+"</div>";
+if(!arr.length)h+='<div class="empty"><b>No encontré nada con esa búsqueda</b>Probá con el nombre del pueblo sin tildes o con el número de la escuela, por ejemplo "ipem 294".</div>';
 document.getElementById("llist").innerHTML=h;
-document.getElementById("lnote").innerHTML=PADRON?'Datos del <a href="https://datos.gob.ar/dataset/educacion-padron-oficial-establecimientos-educativos" target="_blank" rel="noopener">Padrón Oficial de Establecimientos Educativos</a> (Ministerio de Capital Humano, actualizado al '+esc(PADRON.fecha)+'): escuelas de educación común con secundario, incluidas técnicas. Los egresados son una estimación: escuelas no técnicas de la localidad por el promedio de egresados por colegio de su departamento (anuario provincial 2023). "Recorrido en Maps" arma el viaje en Google Maps desde donde estés, por hasta 10 escuelas.':"No se cargó el padrón."}
+document.getElementById("lnote").innerHTML=PADRON?'Fuente: <a href="https://datos.gob.ar/dataset/educacion-padron-oficial-establecimientos-educativos" target="_blank" rel="noopener">Padrón Oficial de Establecimientos Educativos</a>, actualizado al '+esc(PADRON.fecha)+". Escuelas comunes con secundario, técnicas incluidas. Los egresados son una estimación: escuelas no técnicas de la localidad por el promedio de egresados por colegio de su departamento (anuario provincial 2023). \"Recorrido\" arma el viaje en Google Maps desde donde estés, por hasta 10 escuelas.":"No se cargó el padrón."}
 function rZon(){
 document.getElementById("zchips").innerHTML=ZF.map(function(x){return'<button data-zf="'+x[0]+'" class="'+(S.zf===x[0]?"on":"")+'">'+x[1]+"</button>"}).join("");
 var arr=DEP.filter(function(d){return S.zf==="todas"||d[4]===S.zf});
 document.getElementById("zlist").innerHTML=arr.map(function(d){
-var cargados=S.items.filter(function(i){return i.dpto===d[0]}).length,pd=DEPPAD[d[0]];
+var cargados=S.items.filter(function(i){return i.dpto===d[0]}).length,pd=DEPPAD[d[0]]||{esc:0,loc:0,tec:0};
 var eo='<option value="">Sin etapa</option>'+ETA.map(function(e){return'<option'+(S.zonas[d[0]]===e?" selected":"")+">"+e+"</option>"}).join("");
-return'<div class="item" style="--c:'+(d[4]?"var(--info)":"var(--mute)")+'"><div class="top"><span class="name">'+esc(d[0])+'</span>'+(d[4]?'<span class="badge">'+REC[d[4]]+"</span>":"")+'</div>'
-+'<div class="facts num">'+d[1]+" colegios · "+fm(d[2])+" egresados · unos "+Math.round(d[2]/d[1])+" por colegio"+(pd?"<br>En el padrón: "+pd.esc+" escuelas con secundario ("+pd.tec+" técnicas) en "+pd.loc+(pd.loc===1?" localidad":" localidades"):"")+(d[3]?"<br>"+esc(d[3]):"")+'</div>'
-+'<div class="next">'+(cargados?cargados+" en tu lista":"Todavía no hay colegios en tu lista")+"</div>"
-+'<div class="acts"><select class="zsel" data-z="'+esc(d[0])+'">'+eo+'</select><button data-a="vl" data-d="'+esc(d[0])+'">Ver localidades</button><button data-a="vz" data-d="'+esc(d[0])+'">Ver mi lista</button></div></div>'}).join("")}
+return'<article class="card" style="--c:'+(d[4]?"var(--brand)":"var(--line)")+'"><div class="ch"><div style="min-width:0"><h3>'+esc(d[0])+'</h3><p class="where">'+esc(d[3]||"Pueblos chicos")+"</p></div>"+(d[4]?'<span class="when" style="--wc:var(--brand);--wbg:var(--brandsoft)">Recorrido '+d[4]+"</span>":"")+"</div>"
++'<div class="stats"><div class="stat"><b>'+fm(d[2])+'</b><span>egresados/año</span></div><div class="stat"><b>'+pd.esc+'</b><span>escuelas en '+pd.loc+(pd.loc===1?" localidad":" localidades")+'</span></div><div class="stat"><b style="color:'+(cargados?"var(--ok)":"var(--mute)")+'">'+cargados+"</b><span>en tu lista</span></div></div>"
++'<p class="detail">Unos '+Math.round(d[2]/d[1])+" egresados por colegio · "+d[1]+" colegios en el anuario</p>"
++'<div class="state"><label for="z-'+esc(d[0])+'">Etapa</label><select class="zsel" style="width:auto" id="z-'+esc(d[0])+'" data-z="'+esc(d[0])+'">'+eo+"</select></div>"
++'<div class="big"><button class="b add" data-a="vl" data-d="'+esc(d[0])+'">'+IC.search+'Ver localidades</button><button class="b go" data-a="vz" data-d="'+esc(d[0])+'">'+IC.list+"Mi lista</button></div></article>"}).join("")}
 function rComp(){
 var li=function(x){return"<li>"+esc(x)+"</li>"};
-var h='<p class="note" style="margin-top:14px">Datos de Google Maps al 13/11/2026. Maps mostró 5 reseñas por negocio, así que es una muestra y no el total. Faltan precios: completalos en cada ficha con el botón Datos.</p>'
-+'<div class="box"><b>Lo que se repite en las reseñas</b><ul>'+REP.map(li).join("")+'</ul></div>'
-+'<div class="box"><b>Dónde se puede ganar</b><ul>'+OPO.map(li).join("")+'</ul></div>'
-+'<div class="acts" style="margin:14px 0"><button data-a="cx">Copiar comparativa</button><span id="cm" class="note" style="margin:0"></span></div>';
-h+=CP.map(function(c){var v=S.comp[c.id]||{};
-return'<div class="item" style="--c:'+(c.rating>=4.5?"var(--ok)":c.rating<3.7?"var(--bad)":"var(--warn)")+'"><div class="top"><span class="name">'+esc(c.nombre)+'</span><span class="days">'+fr(c.rating)+" ("+fm(c.n)+")</span></div>"
-+'<div class="facts">'+esc(c.rol)+"<br>"+esc(c.dir)+" · "+esc(c.hor)+(c.telt?"<br>"+esc(c.telt):"")+"</div>"
-+'<div class="lk"><b>Elogian:</b> '+esc(c.el)+'</div><div class="lk"><b>Critican:</b> '+esc(c.cr)+"</div>"
-+'<div class="acts">'+(c.cel?'<a class="wa" target="_blank" rel="noopener" href="https://wa.me/'+c.tel+'">WhatsApp</a>':"")+(c.tel?'<a href="'+th(c.tel)+'">Llamar</a>':"")
-+'<a target="_blank" rel="noopener" href="'+dirUrl(c.nombre,c.dir,"Córdoba",c.pid)+'">Cómo llegar</a><a target="_blank" rel="noopener" href="'+mapUrl(c.nombre,c.dir,"Córdoba",c.pid)+'">Ver en Maps</a><button data-a="cd" data-c="'+c.id+'">Datos'+(Object.keys(v).some(function(k){return v[k]})?" •":"")+"</button></div>"
-+(S.cd===c.id?'<div class="f">'+CIN.map(function(x){return'<input class="ci" id="ci-'+c.id+"-"+x[0]+'" data-c="'+c.id+'" data-k="'+x[0]+'" placeholder="'+x[1]+'" value="'+esc(v[x[0]]||"")+'">'}).join("")+'<textarea class="ci" id="ci-'+c.id+'-nota" data-c="'+c.id+'" data-k="nota" rows="3" placeholder="Notas">'+esc(v.nota||"")+"</textarea></div>":"")+"</div>"}).join("");
+var h='<div class="info"><h3>Lo que se repite en las reseñas</h3><ul>'+REP.map(li).join("")+'</ul></div><div class="info"><h3>Dónde se puede ganar</h3><ul>'+OPO.map(li).join("")+"</ul></div>"
++'<div class="big"><button class="b add" data-a="cx">Copiar comparativa para Sheets</button></div><p class="msg" id="cm" style="margin:8px 2px 0"></p>';
+h+='<div class="list">'+CP.map(function(c){var v=S.comp[c.id]||{},tiene=Object.keys(v).some(function(k){return v[k]});
+var col=c.rating>=4.5?["var(--ok)","var(--oksoft)"]:c.rating<3.7?["var(--bad)","var(--badsoft)"]:["var(--warn)","var(--warnsoft)"];
+var o='<article class="card" style="--c:'+col[0]+'"><div class="ch"><div style="min-width:0"><h3>'+esc(c.nombre)+'</h3><p class="where">'+esc(c.rol)+'</p></div><span class="when" style="--wc:'+col[0]+";--wbg:"+col[1]+'">★ '+fr(c.rating)+" ("+fm(c.n)+")</span></div>"
++'<div class="kv"><div><b>Elogian:</b> '+esc(c.el)+"</div><div><b>Critican:</b> "+esc(c.cr)+"</div><div><b>Horario:</b> "+esc(c.hor)+"</div></div>"
++contacto({tel:c.tel,cel:c.cel,dir:c.dir,wa:"https://wa.me/"+c.tel,go:dirUrl(c.nombre,c.dir,"Córdoba",c.pid)})
++'<div class="small" style="grid-template-columns:1fr 1fr"><button class="sbtn'+(S.cd===c.id?" on":"")+(tiene?" dot":"")+'" data-a="cd" data-c="'+c.id+'">Precios y datos</button><a class="sbtn" target="_blank" rel="noopener" href="'+mapUrl(c.nombre,c.dir,"Córdoba",c.pid)+'">Ver reseñas en Maps</a></div>';
+if(S.cd===c.id)o+='<div class="panel compform">'+CIN.map(function(x){return'<input class="field ci" id="ci-'+c.id+"-"+x[0]+'" data-c="'+c.id+'" data-k="'+x[0]+'" placeholder="'+x[1]+'" aria-label="'+x[1]+'" value="'+esc(v[x[0]]||"")+'">'}).join("")+'<textarea class="nt ci" id="ci-'+c.id+'-nota" data-c="'+c.id+'" data-k="nota" placeholder="Notas" aria-label="Notas">'+esc(v.nota||"")+"</textarea></div>";
+return o+"</article>"}).join("")+"</div>";
+h+='<p class="note">Datos de Google Maps al 13/11/2026. Maps mostró 5 reseñas por negocio, así que es una muestra y no el total. Faltan precios: completalos en cada ficha con "Precios y datos".</p>';
 document.getElementById("clist").innerHTML=h}
 function render(){sum();rTabs();if(S.tab==="colegios")rCol();if(S.tab==="localidades")rLoc();if(S.tab==="zonas")rZon();if(S.tab==="competencia")rComp()}
-function setTab(t){S.tab=t;try{history.replaceState(null,"","#"+t)}catch(e){try{location.hash=t}catch(x){}}render();window.scrollTo(0,0)}
+function setTab(t){S.tab=t;S.borrar=null;try{history.replaceState(null,"","#"+t)}catch(e){try{location.hash=t}catch(x){}}render();window.scrollTo(0,0)}
 function find(id){return S.items.filter(function(i){return String(i.id)===String(id)})[0]}
 
 /* ---------- Acciones ---------- */
 document.addEventListener("click",function(e){var t=e.target.closest("button,a");if(!t)return;var a=t.dataset.a;
+if(a!=="del"&&S.borrar){S.borrar=null;if(!a&&!t.dataset.f){render()}}
 if(t.dataset.t){setTab(t.dataset.t);return}
-if(t.dataset.f){S.f=t.dataset.f;render()}
+if(t.dataset.f){S.f=S.f===t.dataset.f?"todas":t.dataset.f;render()}
+if(t.id==="allbtn"){S.f="todas";S.dpto="";S.ciudad="";S.nivel="";S.etapa="";render()}
 if(t.dataset.zf){S.zf=t.dataset.zf;render()}
 if(t.dataset.lz){S.lz=t.dataset.lz;render()}
 if(a==="vz"){S.dpto=t.dataset.d;S.ciudad="";S.nivel="";S.etapa="";S.f="todas";setTab("colegios")}
@@ -391,12 +523,14 @@ if(a==="vl"){S.ld=t.dataset.d;S.lz="todas";S.lq="";setTab("localidades")}
 if(a==="lo"){var k=t.dataset.k;S.lopen[k]=!S.lopen[k];render()}
 if(a==="le"){var es=CUEM[t.dataset.c];if(es&&agregar(es))render()}
 if(a==="la"){var l=LOCM[t.dataset.k];if(l){l.esc.forEach(agregar);S.lopen[l.k]=true;render()}}
-if(a==="rs"){var it=find(t.dataset.id);S.open=S.open===String(it.id)?null:String(it.id);render()}
-if(a==="nt"){var n=find(t.dataset.id);S.nota=S.nota===String(n.id)?null:String(n.id);render()}
+if(a==="rs"){S.open=S.open===t.dataset.id?null:t.dataset.id;render()}
+if(a==="nt"){S.nota=S.nota===t.dataset.id?null:t.dataset.id;render();var ta=document.getElementById("nt"+t.dataset.id);if(ta)ta.focus()}
 if(a==="cd"){S.cd=S.cd===t.dataset.c?null:t.dataset.c;render()}
-if(a==="copy"){var m=reps()[t.dataset.k].m;copiar(m,t,"Copiado")}
-if(a==="hoy"){var i=find(t.dataset.id);i.ultimo=ago(0);guardarItem(i);render()}
-if(a==="del"){var id=String(t.dataset.id);if(S.del.indexOf(id)<0)S.del.push(id);S.items=S.items.filter(function(i){return String(i.id)!==id});borrarItem(id);render()}
+if(a==="cp"){copiar(t.dataset.v,t,"Copiado")}
+if(a==="copy"){var m=reps()[t.dataset.k].m;copiar(m,t,"Copiado. Pegalo en el chat.")}
+if(a==="hoy"){var i=find(t.dataset.id);i.ultimo=ago(0);if(i.estado==="Sin contacto")i.estado="Contactado";guardarItem(i);render()}
+if(a==="del"){var id=String(t.dataset.id);if(S.borrar!==id){S.borrar=id;render();return}
+S.borrar=null;if(S.del.indexOf(id)<0)S.del.push(id);S.items=S.items.filter(function(i){return String(i.id)!==id});borrarItem(id);render()}
 if(a==="cx"){var cl=function(s){return String(s==null?"":s).replace(/[\t\r\n]+/g," ")};
 var rows=[["Competidor","Puntaje","Reseñas","Dirección","Teléfono","Precio buzo","Precio campera","Mínimo","Seña y cuotas","Plazo","Redes o web","Notas"]].concat(CP.map(function(c){var v=S.comp[c.id]||{};return[c.nombre,c.rating,c.n,c.dir,c.telt,v.pbuzo,v.pcamp,v.pmin,v.pcuo,v.pplz,v.pred,v.nota]}));
 copiar(rows.map(function(r){return r.map(cl).join(TB)}).join(NL),document.getElementById("cm"),"Copiado. Pegalo en la celda A1 de una hoja de Google.")}});
@@ -408,20 +542,21 @@ if(t.dataset.z){S.zonas[t.dataset.z]=t.value;guardarAjustes();render();return}
 if(t.classList.contains("est")){var it=find(t.dataset.id);it.estado=t.value;guardarItem(it);render()}});
 document.addEventListener("input",function(e){var t=e.target;
 if(t.id==="lq"){S.lq=t.value;clearTimeout(timers.lq);timers.lq=setTimeout(rLoc,200);return}
-if(t.classList.contains("nt")){var it=find(t.dataset.id);if(it){it.nota=t.value;guardarItem(it,900)}}
+if(t.classList.contains("nt")&&t.dataset.id){var it=find(t.dataset.id);if(it){it.nota=t.value;guardarItem(it,900)}}
 if(t.classList.contains("ci")){var c=t.dataset.c;S.comp[c]=S.comp[c]||{};S.comp[c][t.dataset.k]=t.value;guardarAjustes(900)}});
-document.getElementById("dp").innerHTML='<option value="">Departamento</option>'+DEP.map(function(d){return"<option>"+esc(d[0])+"</option>"}).join("");
-document.getElementById("add").onclick=function(){var v=function(x){return document.getElementById(x).value.trim()};
-if(!v("n"))return;var it={id:String(Date.now()),nombre:v("n"),nivel:v("niv"),ciudad:v("c")||"Córdoba",dpto:v("dp"),dir:v("dr"),pid:"",rating:null,nres:0,eg:Number(v("e"))||0,tel:v("t"),cel:document.getElementById("cel").checked,origen:v("o"),etapa:v("et"),contacto:v("ct"),decide:v("dc"),nota:"",estado:"Sin contacto",ultimo:""};S.items.push(it);guardarItem(it);
-["n","dr","e","t","ct","dc"].forEach(function(x){document.getElementById(x).value=""});document.getElementById("cel").checked=false;render()};
-function cfg(){S.cfg.nombre=document.getElementById("cn").value;S.cfg.empresa=document.getElementById("ce").value;S.cfg.limite=Number(document.getElementById("cl").value)||30;S.cfg.resp=document.getElementById("rs").value;guardarAjustes(900);sum()}
+document.getElementById("dp").innerHTML='<option value="">Elegí el departamento</option>'+DEP.map(function(d){return"<option>"+esc(d[0])+"</option>"}).join("");
+document.getElementById("add").onclick=function(){var v=function(x){return document.getElementById(x).value.trim()},m=document.getElementById("addmsg");
+if(!v("n")){m.style.color="var(--bad)";m.textContent="Falta el nombre del colegio.";return}
+var it={id:String(Date.now()),nombre:v("n"),nivel:v("niv"),ciudad:v("c")||"Córdoba",dpto:v("dp"),dir:v("dr"),pid:"",rating:null,nres:0,eg:Number(v("e"))||0,tel:v("t"),cel:document.getElementById("cel").checked,origen:v("o"),etapa:v("et"),contacto:v("ct"),decide:v("dc"),nota:"",estado:"Sin contacto",ultimo:""};S.items.push(it);guardarItem(it);
+["n","dr","e","t","ct","dc"].forEach(function(x){document.getElementById(x).value=""});document.getElementById("cel").checked=false;m.style.color="var(--ok)";m.textContent="Guardado: "+it.nombre;render()};
+function cfg(){S.cfg.nombre=document.getElementById("cn").value;S.cfg.empresa=document.getElementById("ce").value;S.cfg.limite=Number(document.getElementById("cl").value)||30;S.cfg.resp=document.getElementById("rs").value;guardarAjustes(900)}
 ["cn","ce","cl","rs"].forEach(function(x){document.getElementById(x).addEventListener("input",cfg)});
 function bl(){var q=(document.getElementById("bq").value+" "+document.getElementById("bc").value).trim();document.getElementById("lm").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);document.getElementById("lg").href="https://www.google.com/search?q="+encodeURIComponent(q)}
 ["bq","bc"].forEach(function(x){document.getElementById(x).addEventListener("input",bl)});
 document.getElementById("ib").onclick=function(){var tx=document.getElementById("it").value.split(NL),n=0,base=Date.now();tx.forEach(function(l,k){var p=l.split(/[,;\t]/).map(function(s){return s.trim()});if(!p[0])return;var it={id:String(base+k),nombre:p[0],nivel:cap(p[1])||"Secundario",ciudad:p[2]||"Córdoba",dpto:"",dir:"",pid:"",rating:null,nres:0,eg:Number(p[3])||0,tel:p[4]||"",cel:false,origen:"prospecto",etapa:"",contacto:"",decide:"",nota:"",estado:"Sin contacto",ultimo:""};S.items.push(it);guardarItem(it);n++});document.getElementById("it").value="";document.getElementById("im").textContent=n?"Se importaron "+n+" colegios.":"No encontré colegios para importar.";if(n)render()};
 document.getElementById("ex").onclick=function(){var cl=function(s){return String(s==null?"":s).replace(/[\t\r\n]+/g," ")};
-var rows=[["Colegio","Nivel","Sector","Localidad","Departamento","Dirección","Puntaje","Egresados","Teléfono","Mail","Contacto","Decide en","Etapa","Origen","Estado","Último contacto","Notas","CUE"]].concat(S.items.map(function(i){return[i.nombre,i.nivel,i.sector||"",i.ciudad,i.dpto,i.dir,i.rating||"",i.eg||"",i.tel,i.mail||"",i.contacto,i.decide,et(i),i.origen,i.estado,i.ultimo,i.nota,i.cue||""]}));
+var rows=[["Colegio","Nivel","Sector","Localidad","Departamento","Dirección","Puntaje","Egresados","Teléfono","Mail","Contacto","Decide en","Etapa","Origen","Estado","Último contacto","Notas","CUE"]].concat(S.items.map(function(i){return[i.nombre,i.nivel,i.sector||"",i.ciudad,i.dpto,i.dir,i.rating||"",i.eg||"",telLindo(i.tel),i.mail||"",i.contacto,i.decide,et(i),i.origen,i.estado,i.ultimo,i.nota,i.cue||""]}));
 copiar(rows.map(function(r){return r.map(cl).join(TB)}).join(NL),document.getElementById("xm"),"Copiado. Pegalo en la celda A1 de una hoja de Google.")};
 window.addEventListener("hashchange",function(){var h=(location.hash||"").slice(1);if(TABIDS.indexOf(h)>=0&&h!==S.tab){S.tab=h;render()}});
-loadLocal();var h0=(location.hash||"").slice(1);if(TABIDS.indexOf(h0)>=0)S.tab=h0;estado("local");document.getElementById("st").textContent="Abriendo datos…";render();bl();iniciarNube();
+loadLocal();var h0=(location.hash||"").slice(1);if(TABIDS.indexOf(h0)>=0)S.tab=h0;estado("local");var st0=document.getElementById("st");st0.textContent="Abriendo…";st0.style.color="var(--mute)";st0.style.background="var(--soft)";render();bl();iniciarNube();
 </script>
