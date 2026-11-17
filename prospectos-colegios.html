@@ -150,6 +150,18 @@ details.box[open] summary::after{content:"–"}
 .b[disabled]{opacity:.6;cursor:wait}
 .files{font-size:14px;margin:10px 0 0;overflow-wrap:anywhere}
 .files a{color:var(--brand);font-weight:700}
+.got{margin:12px 0 0;padding:12px;border-radius:12px;background:var(--oksoft)}
+.got b{font-size:15px;color:var(--ok)}
+.got dl{margin:6px 0 0;display:grid;gap:6px}
+.got dt{font-size:13px;font-weight:700;color:var(--mute)}
+.got dd{margin:0;font-size:15px;overflow-wrap:anywhere}
+.notas{margin:10px 0 0;font-size:14px}
+.notas summary{cursor:pointer;font-weight:800;color:var(--brand);padding:6px 0}
+.notas p{white-space:pre-wrap;margin:6px 0 0;color:var(--ink)}
+.pr{padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.pr:first-of-type{border-top:0}
+.pr b{font-size:16px}
+.pr span{color:var(--mute);font-weight:700}
 .cl{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--mute)}
 .legend{display:grid;gap:6px;font-size:14px}
 .legend span{display:flex;align-items:center;gap:8px}
@@ -571,20 +583,25 @@ a.err=false;a.tx="";PEND[id]=[];a.extra="";guardarAjustes()}
 catch(e){console.warn(e);a.err=true;a.msg={not_granted:"No diste permiso para usar Claude desde la app. Mandame las capturas en el chat y las cargo yo.",rate_limited:"Muchos pedidos seguidos. Probá de nuevo en un rato.",image_rejected:"Alguna captura no se pudo leer. Probá con otra.",invalid_json:"Claude no devolvió los datos bien. Tocá de nuevo."}[e&&e.code]||"No se pudo leer ("+(e&&e.code||"error")+"). Probá de nuevo o mandame las capturas en el chat.";if(guardados)guardarAjustes()}
 a.run=false;pintar()}
 function colComp(c){return c.rating==null?["var(--mute)","var(--soft)","Sin puntaje"]:c.rating>=4.5?["var(--ok)","var(--oksoft)","Bueno"]:c.rating<3.7?["var(--bad)","var(--badsoft)","Malo"]:["var(--warn)","var(--warnsoft)","Regular"]}
+function resumenComp(v){var filas=CIN.filter(function(x){return v[x[0]]&&x[0]!=="pred"});
+var h="";if(filas.length)h+='<div class="got"><b>Lo que nos dijeron</b><dl>'+filas.map(function(x){return"<dt>"+esc(x[1])+"</dt><dd>"+esc(v[x[0]])+"</dd>"}).join("")+"</dl></div>";
+if(v.nota)h+='<details class="notas"><summary>Notas de la charla</summary><p>'+esc(v.nota)+"</p></details>";return h}
+function tablaPrecios(){var con=CP.filter(function(c){var v=S.comp[c.id]||{};return v.pbuzo||v.pcamp});if(!con.length)return"";
+return'<div class="info"><h3>Precios que ya conseguimos</h3>'+con.map(function(c){var v=S.comp[c.id]||{};return'<div class="pr"><b>'+esc(c.nombre)+'</b> <span class="where">· '+esc(c.zona)+"</span>"+(v.pbuzo?"<div><span>Buzo:</span> "+esc(v.pbuzo)+"</div>":"")+(v.pcamp?"<div><span>Campera y otras:</span> "+esc(v.pcamp)+"</div>":"")+(v.preg?"<div><span>Regalos:</span> "+esc(v.preg)+"</div>":"")+(v.pplz?"<div><span>Plazo:</span> "+esc(v.pplz)+"</div>":"")+"</div>"}).join("")+"</div>"}
 function rComp(){
 var li=function(x){return"<li>"+esc(x)+"</li>"};
 var arr=CP.filter(function(c){return S.cz==="todas"||(S.cz==="hoy"?c.hoy:c.zona===S.cz)}).sort(function(a,b){if(a.rating==null&&b.rating==null)return a.nombre.localeCompare(b.nombre);if(a.rating==null)return 1;if(b.rating==null)return-1;return a.rating-b.rating||b.n-a.n});
 var hechos=CP.filter(function(c){return c.hoy&&(S.comp[c.id]||{}).cont}).length;
 var h='<div class="info"><h3>Qué significan los colores</h3><p style="margin:0 0 8px">Es el puntaje de Google Maps (de 1 a 5 estrellas) que les dan sus clientes. La lista va <b>del peor al mejor</b>.</p><div class="legend"><span><i style="background:var(--bad)"></i>Rojo: menos de 3,7 · muchas quejas</span><span><i style="background:var(--warn)"></i>Amarillo: de 3,7 a 4,4 · regular</span><span><i style="background:var(--ok)"></i>Verde: 4,5 o más · bien puntuado</span><span><i style="background:var(--mute)"></i>Gris: sin puntaje en Maps (los datos salen de su web o de un directorio)</span></div></div>'
-+'<div class="seg" style="margin-top:12px">'+CZ.map(function(x){return'<button data-cz="'+x[0]+'" class="'+(S.cz===x[0]?"on":"")+'">'+x[1]+(x[0]==="hoy"?" ("+hechos+"/6)":"")+"</button>"}).join("")+"</div>";
++tablaPrecios()+'<div class="seg" style="margin-top:12px">'+CZ.map(function(x){return'<button data-cz="'+x[0]+'" class="'+(S.cz===x[0]?"on":"")+'">'+x[1]+(x[0]==="hoy"?" ("+hechos+"/6)":"")+"</button>"}).join("")+"</div>";
 if(S.cz==="hoy")h+='<div class="info"><h3>Para Mauricio: 3 de Córdoba y 3 de Buenos Aires</h3><p style="margin:0 0 6px">Preguntale esto a cada una y anotá las respuestas en "Anotar respuestas". El botón WhatsApp ya lleva la consulta escrita.</p><ol class="qs">'+PREG.map(li).join("")+"</ol></div>";
 h+='<div class="list">'+arr.map(function(c){var v=S.comp[c.id]||{},tiene=CIN.some(function(x){return v[x[0]]}),col=colComp(c);
 var punt=c.rating==null?"Sin puntaje":"★ "+fr(c.rating)+" ("+fm(c.n)+")";
 var o='<article class="card" style="--c:'+col[0]+'"><div class="ch"><div style="min-width:0"><h3>'+esc(c.nombre)+'</h3><p class="where">'+esc(c.zona)+" · "+esc(c.rol)+'</p></div><span class="when" style="--wc:'+col[0]+";--wbg:"+col[1]+'">'+punt+"</span></div>"
-+'<div class="tags">'+(c.rating!=null?'<span class="tag" style="background:'+col[1]+";color:"+col[0]+'">'+col[2]+"</span>":"")+(c.hoy?'<span class="tag tinfo">Para llamar hoy</span>':"")+(v.cont?'<span class="tag ok">Contactado el '+esc(v.cont.split("-").reverse().join("/"))+"</span>":"")+"</div>"
++'<div class="tags">'+(c.rating!=null?'<span class="tag" style="background:'+col[1]+";color:"+col[0]+'">'+col[2]+"</span>":"")+(c.hoy?'<span class="tag tinfo">Para llamar hoy</span>':"")+((v.pbuzo||v.pcamp)?'<span class="tag ok">Con precios</span>':"")+(v.cont?'<span class="tag ok">Contactado el '+esc(v.cont.split("-").reverse().join("/"))+"</span>":"")+"</div>"
 +'<div class="kv">'+(c.el?"<div><b>Elogian:</b> "+esc(c.el)+"</div>":"")+(c.cr?"<div><b>Critican:</b> "+esc(c.cr)+"</div>":"")+(c.sabe?"<div><b>Lo que dice su web:</b><ul>"+c.sabe.map(li).join("")+"</ul></div>":"")+(c.cotiza?"<div><b>Cómo cotizan:</b> "+esc(c.cotiza)+"</div>":"")+(c.tel2?"<div><b>Otro teléfono:</b> "+esc(c.tel2)+"</div>":"")+(c.hor?"<div><b>Horario:</b> "+esc(c.hor)+"</div>":"")+(c.nota?'<div style="color:var(--warn)">'+esc(c.nota)+"</div>":"")+"</div>"
 +contacto({tel:c.tel,cel:c.cel,mail:c.mail,dir:c.dir,wa:c.tel?"https://wa.me/"+(c.cel?"549"+digitos(c.tel):digitos(c.tel))+"?text="+encodeURIComponent(MSGC):"",go:dirUrl(c.nombre,c.dir,c.ciudad||"Córdoba",c.pid)})
-+archivos(v)
++resumenComp(v)+archivos(v)
 +'<div class="small" style="grid-template-columns:1fr 1fr">'
 +'<button class="sbtn'+(S.cd===c.id?" on":"")+(tiene?" dot":"")+'" data-a="cd" data-c="'+c.id+'">Anotar respuestas</button>'
 +'<button class="sbtn" data-a="cc" data-c="'+c.id+'">'+(v.cont?"Contactado ✓":"Ya lo contacté")+"</button>"
