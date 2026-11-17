@@ -143,6 +143,13 @@ details.box[open] summary::after{content:"–"}
 .kv{display:grid;gap:4px;margin:10px 0 0;font-size:14px}
 .kv b{font-weight:700}
 .compform{display:grid;gap:8px;margin:12px 0 0}
+.auto{display:grid;gap:8px;padding:12px;border-radius:12px;background:var(--card);border:2px dashed var(--line)}
+.auto b{font-size:15px}
+.pick{display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:12px;border:2px solid var(--brand);color:var(--brand);font-weight:800;cursor:pointer}
+.pick svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2}
+.b[disabled]{opacity:.6;cursor:wait}
+.files{font-size:14px;margin:10px 0 0;overflow-wrap:anywhere}
+.files a{color:var(--brand);font-weight:700}
 .cl{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--mute)}
 .legend{display:grid;gap:6px;font-size:14px}
 .legend span{display:flex;align-items:center;gap:8px}
@@ -527,6 +534,42 @@ return'<article class="card" style="--c:'+(d[4]?"var(--brand)":"var(--line)")+'"
 +'<p class="detail">Unos '+Math.round(d[2]/d[1])+" egresados por colegio · "+d[1]+" colegios en el anuario</p>"
 +'<div class="state"><label for="z-'+esc(d[0])+'">Etapa</label><select class="zsel" style="width:auto" id="z-'+esc(d[0])+'" data-z="'+esc(d[0])+'">'+eo+"</select></div>"
 +'<div class="big"><button class="b add" data-a="vl" data-d="'+esc(d[0])+'">'+IC.search+'Ver localidades</button><button class="b go" data-a="vz" data-d="'+esc(d[0])+'">'+IC.list+"Mi lista</button></div></article>"}).join("")}
+/* ---------- Leer capturas y catálogos con Claude ---------- */
+var SAMPLE=null,ASSETS=null,LIM=null,PEND={},AUTO={};
+(async function(){try{if(window.claude&&window.claude.use){SAMPLE=await window.claude.use("sample");ASSETS=await window.claude.use("assets");if(SAMPLE)LIM=await SAMPLE.limits().catch(function(){return null})}}catch(e){}if(S.tab==="competencia")pintar()})();
+function puedeLeer(){return!!(SAMPLE&&LIM&&LIM.images)}
+function archivos(v){var f=v.files||[];if(!f.length)return"";return'<div class="files"><b>Archivos guardados:</b> '+f.map(function(x){return'<a target="_blank" rel="noopener" href="/_blob/'+esc(x.id)+'">'+esc(x.name||"archivo")+"</a>"}).join(" · ")+"</div>"}
+function autoBox(c,v){var a=AUTO[c.id]||{},n=(PEND[c.id]||[]).length;
+if(!SAMPLE&&!ASSETS)return'<div class="auto"><b>Cargar desde capturas</b><p>Esto funciona abriendo la app con tu cuenta de Claude. Si no, mandame las capturas en el chat y las cargo yo.</p></div>';
+return'<div class="auto"><b>Cargar desde capturas o catálogo</b><p>Subí capturas del chat o del catálogo'+(puedeLeer()?" y Claude completa los datos solo. Los PDF se guardan, pero para leerlos mandá capturas de las páginas.":". Se guardan en la ficha.")+'</p>'
++'<label class="pick">'+IC.plus+(n?n+(n===1?" archivo elegido":" archivos elegidos"):"Elegir capturas o PDF")+'<input type="file" multiple accept="image/*,application/pdf" data-up="'+c.id+'" hidden></label>'
++(puedeLeer()?'<textarea class="field" id="tx-'+c.id+'" data-tx="'+c.id+'" rows="3" placeholder="O pegá acá el texto del chat de WhatsApp">'+esc(a.tx||"")+"</textarea>":"")
++'<button class="b add" data-a="leer" data-c="'+c.id+'"'+(a.run?" disabled":"")+">"+(a.run?"Leyendo… puede tardar un minuto":puedeLeer()?"Leer y completar":"Guardar archivos")+"</button>"
++(a.msg?'<p class="msg" style="color:'+(a.err?"var(--bad)":"var(--ok)")+'">'+esc(a.msg)+"</p>":"")+"</div>"}
+var CLAVES=CIN.map(function(x){return x[0]});
+async function leer(id){var c=CP.filter(function(x){return x.id===id})[0],files=PEND[id]||[],a=AUTO[id]=AUTO[id]||{};
+var tx=String(a.tx||"").trim();if(!files.length&&!tx){a.msg="Elegí al menos una captura o pegá el texto.";a.err=true;pintar();return}
+a.run=true;a.msg="";a.err=false;pintar();
+var v=S.comp[id]=S.comp[id]||{},guardados=0,completos=0;
+try{
+/* 1. guardar los archivos en la ficha */
+if(ASSETS){for(var k=0;k<files.length;k++){try{var r=await ASSETS.upload(files[k]);v.files=(v.files||[]).concat([{id:r.id,name:files[k].name||"captura",fecha:ago(0)}]);guardados++}catch(e){console.warn(e)}}}
+/* 2. leer con Claude las imágenes y el texto */
+var imgs=files.filter(function(f){return/^image\//.test(f.type)});
+if(puedeLeer()&&(imgs.length||tx)){var max=LIM.images.maxCount||5;
+var prompt="Sos asistente de un vendedor de una fábrica textil de Córdoba (Argentina) que investiga a la competencia en ropa de egresados (buzos, camperas, remeras). "
++"Te paso "+(imgs.length?imgs.length+" captura(s) de la conversación o del catálogo de la empresa \""+c.nombre+"\"":"")+(imgs.length&&tx?" y ":"")+(tx?"el texto de la conversación con \""+c.nombre+"\"":"")+". "
++"Sacá solo lo que dice ahí, sin inventar. Respondé solo un objeto JSON con estas claves, todas texto en español, cortas, y \"\" si no aparece: "
++'{"pmin":"mínimo de prendas por curso","pbuzo":"precio del buzo","pcamp":"precio de la campera","pplz":"plazo de entrega","pcuo":"formas de pago, seña y cuotas","ptela":"tela y calidad","preg":"regalos o beneficios por cantidad","penv":"envío al interior","pmue":"prendas de muestra para probar talles","pred":"instagram, web o teléfono nuevo","resumen":"2 o 3 frases: cómo trabajan, qué prendas y diseños ofrecen y qué datos pidieron"}'
++(tx?"\n\nTexto de la conversación:\n"+tx.slice(0,20000):"");
+var out=await SAMPLE.json(prompt,{images:imgs.slice(0,max),cache:false});
+if(out&&typeof out==="object"){CLAVES.forEach(function(kk){var nv=String(out[kk]||"").trim();if(!nv)return;var old=String(v[kk]||"").trim();if(!old){v[kk]=nv;completos++}else if(old.indexOf(nv)<0){v[kk]=old+" · "+nv;completos++}});
+var res=String(out.resumen||"").trim();if(res){v.nota=(v.nota?v.nota+"\n\n":"")+"("+ago(0).split("-").reverse().join("/")+") "+res}}
+if(imgs.length>max)a.extra=" Leí las primeras "+max+" capturas; subí el resto en otra tanda."}
+a.msg=(completos?"Listo: completé "+completos+(completos===1?" dato":" datos")+". Revisalos abajo.":puedeLeer()?"No encontré datos para completar.":"")+(guardados?" Guardé "+guardados+(guardados===1?" archivo":" archivos")+" en la ficha.":"")+(a.extra||"");
+a.err=false;a.tx="";PEND[id]=[];a.extra="";guardarAjustes()}
+catch(e){console.warn(e);a.err=true;a.msg={not_granted:"No diste permiso para usar Claude desde la app. Mandame las capturas en el chat y las cargo yo.",rate_limited:"Muchos pedidos seguidos. Probá de nuevo en un rato.",image_rejected:"Alguna captura no se pudo leer. Probá con otra.",invalid_json:"Claude no devolvió los datos bien. Tocá de nuevo."}[e&&e.code]||"No se pudo leer ("+(e&&e.code||"error")+"). Probá de nuevo o mandame las capturas en el chat.";if(guardados)guardarAjustes()}
+a.run=false;pintar()}
 function colComp(c){return c.rating==null?["var(--mute)","var(--soft)","Sin puntaje"]:c.rating>=4.5?["var(--ok)","var(--oksoft)","Bueno"]:c.rating<3.7?["var(--bad)","var(--badsoft)","Malo"]:["var(--warn)","var(--warnsoft)","Regular"]}
 function rComp(){
 var li=function(x){return"<li>"+esc(x)+"</li>"};
@@ -541,6 +584,7 @@ var o='<article class="card" style="--c:'+col[0]+'"><div class="ch"><div style="
 +'<div class="tags">'+(c.rating!=null?'<span class="tag" style="background:'+col[1]+";color:"+col[0]+'">'+col[2]+"</span>":"")+(c.hoy?'<span class="tag tinfo">Para llamar hoy</span>':"")+(v.cont?'<span class="tag ok">Contactado el '+esc(v.cont.split("-").reverse().join("/"))+"</span>":"")+"</div>"
 +'<div class="kv">'+(c.el?"<div><b>Elogian:</b> "+esc(c.el)+"</div>":"")+(c.cr?"<div><b>Critican:</b> "+esc(c.cr)+"</div>":"")+(c.sabe?"<div><b>Lo que dice su web:</b><ul>"+c.sabe.map(li).join("")+"</ul></div>":"")+(c.cotiza?"<div><b>Cómo cotizan:</b> "+esc(c.cotiza)+"</div>":"")+(c.tel2?"<div><b>Otro teléfono:</b> "+esc(c.tel2)+"</div>":"")+(c.hor?"<div><b>Horario:</b> "+esc(c.hor)+"</div>":"")+(c.nota?'<div style="color:var(--warn)">'+esc(c.nota)+"</div>":"")+"</div>"
 +contacto({tel:c.tel,cel:c.cel,mail:c.mail,dir:c.dir,wa:c.tel?"https://wa.me/"+(c.cel?"549"+digitos(c.tel):digitos(c.tel))+"?text="+encodeURIComponent(MSGC):"",go:dirUrl(c.nombre,c.dir,c.ciudad||"Córdoba",c.pid)})
++archivos(v)
 +'<div class="small" style="grid-template-columns:1fr 1fr">'
 +'<button class="sbtn'+(S.cd===c.id?" on":"")+(tiene?" dot":"")+'" data-a="cd" data-c="'+c.id+'">Anotar respuestas</button>'
 +'<button class="sbtn" data-a="cc" data-c="'+c.id+'">'+(v.cont?"Contactado ✓":"Ya lo contacté")+"</button>"
@@ -548,7 +592,7 @@ var o='<article class="card" style="--c:'+col[0]+'"><div class="ch"><div style="
 +(c.web?'<a class="sbtn" target="_blank" rel="noopener" href="'+esc(c.web)+'">Su web</a>':"")
 +(c.pid?'<a class="sbtn" target="_blank" rel="noopener" href="'+mapUrl(c.nombre,c.dir,"Córdoba",c.pid)+'">Reseñas en Maps</a>':"")
 +"</div>";
-if(S.cd===c.id)o+='<div class="panel compform"><p>Se guarda solo mientras escribís.</p>'+CIN.map(function(x){return'<label class="cl">'+x[1]+'<input class="field ci" id="ci-'+c.id+"-"+x[0]+'" data-c="'+c.id+'" data-k="'+x[0]+'" value="'+esc(v[x[0]]||"")+'"></label>'}).join("")+'<label class="cl">Otras notas<textarea class="nt ci" id="ci-'+c.id+'-nota" data-c="'+c.id+'" data-k="nota">'+esc(v.nota||"")+"</textarea></label></div>";
+if(S.cd===c.id)o+='<div class="panel compform">'+autoBox(c,v)+'<p>O completalo a mano (se guarda solo mientras escribís):</p>'+CIN.map(function(x){return'<label class="cl">'+x[1]+'<input class="field ci" id="ci-'+c.id+"-"+x[0]+'" data-c="'+c.id+'" data-k="'+x[0]+'" value="'+esc(v[x[0]]||"")+'"></label>'}).join("")+'<label class="cl">Otras notas<textarea class="nt ci" id="ci-'+c.id+'-nota" data-c="'+c.id+'" data-k="nota">'+esc(v.nota||"")+"</textarea></label></div>";
 return o+"</article>"}).join("")+"</div>"
 +'<div class="info"><h3>Lo que se repite en las reseñas de Córdoba</h3><ul>'+REP.map(li).join("")+'</ul></div><div class="info"><h3>Dónde se puede ganar</h3><ul>'+OPO.map(li).join("")+"</ul></div>"
 +'<div class="big"><button class="b add" data-a="cx">Copiar comparativa para Sheets</button></div><p class="msg" id="cm" style="margin:8px 2px 0"></p>'
@@ -575,6 +619,7 @@ if(a==="rs"){S.open=S.open===t.dataset.id?null:t.dataset.id;render()}
 if(a==="nt"){S.nota=S.nota===t.dataset.id?null:t.dataset.id;render();var ta=document.getElementById("nt"+t.dataset.id);if(ta)ta.focus()}
 if(a==="cd"){S.cd=S.cd===t.dataset.c?null:t.dataset.c;render()}
 if(t.dataset.cz){S.cz=t.dataset.cz;render()}
+if(a==="leer"){leer(t.dataset.c);return}
 if(a==="cc"){var cc=t.dataset.c;S.comp[cc]=S.comp[cc]||{};S.comp[cc].cont=S.comp[cc].cont?"":ago(0);guardarAjustes();render()}
 if(a==="cp"){copiar(t.dataset.v,t,"Copiado")}
 if(a==="copy"){var m=reps()[t.dataset.k].m;copiar(m,t,"Copiado. Pegalo en el chat.")}
@@ -588,9 +633,11 @@ document.addEventListener("change",function(e){var t=e.target;
 if(t.dataset.s){S[t.dataset.s]=t.value;if(t.dataset.s==="dpto")S.ciudad="";render();return}
 if(t.id==="ld"){S.ld=t.value;render();return}
 if(t.id==="lo"){S.lo=t.value;render();return}
+if(t.dataset.up){PEND[t.dataset.up]=Array.prototype.slice.call(t.files||[]);(AUTO[t.dataset.up]=AUTO[t.dataset.up]||{}).msg="";render();return}
 if(t.dataset.z){S.zonas[t.dataset.z]=t.value;guardarAjustes();render();return}
 if(t.classList.contains("est")){var it=find(t.dataset.id);it.estado=t.value;guardarItem(it);render()}});
 document.addEventListener("input",function(e){var t=e.target;
+if(t.dataset.tx){(AUTO[t.dataset.tx]=AUTO[t.dataset.tx]||{}).tx=t.value;return}
 if(t.id==="lq"){S.lq=t.value;clearTimeout(timers.lq);timers.lq=setTimeout(rLoc,200);return}
 if(t.classList.contains("nt")&&t.dataset.id){var it=find(t.dataset.id);if(it){it.nota=t.value;guardarItem(it,900)}}
 if(t.classList.contains("ci")){var c=t.dataset.c;S.comp[c]=S.comp[c]||{};S.comp[c][t.dataset.k]=t.value;guardarAjustes(900)}});
