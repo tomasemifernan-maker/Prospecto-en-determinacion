@@ -62,10 +62,11 @@ h2{font-size:18px;margin:26px 0 10px;font-weight:800}
 .ch h3{font-size:19px;line-height:1.25;margin:0;font-weight:800;min-width:0;overflow-wrap:anywhere}
 .where{font-size:14px;color:var(--mute);margin:3px 0 0}
 .when{font-size:13px;font-weight:700;white-space:nowrap;padding:4px 9px;border-radius:999px;background:var(--wbg,var(--soft));color:var(--wc,var(--mute))}
-.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.tags{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 0}
+.tags:empty{display:none}
 .tag{font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--mute)}
 .tag.ok{background:var(--oksoft);color:var(--ok)}
-.tag.info{background:var(--brandsoft);color:var(--brand)}
+.tag.tinfo{background:var(--brandsoft);color:var(--brand)}
 .state{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin:14px 0 0}
 .state label{font-size:13px;font-weight:700;color:var(--mute)}
 .est{appearance:none;-webkit-appearance:none;border:0;border-radius:999px;padding:8px 34px 8px 14px;font-weight:800;font-size:15px;background:var(--eb,var(--soft)) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='2' fill='none'/%3E%3C/svg%3E") no-repeat right 13px center;color:var(--ec,var(--ink));cursor:pointer;max-width:100%}
@@ -142,6 +143,14 @@ details.box[open] summary::after{content:"–"}
 .kv{display:grid;gap:4px;margin:10px 0 0;font-size:14px}
 .kv b{font-weight:700}
 .compform{display:grid;gap:8px;margin:12px 0 0}
+.cl{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--mute)}
+.legend{display:grid;gap:6px;font-size:14px}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend i{width:14px;height:14px;border-radius:4px;flex:none}
+.qs{margin:0;padding-left:20px}
+.qs li{margin:5px 0}
+.kv ul{margin:4px 0 0;padding-left:18px}
+.kv li{margin:3px 0}
 @media (prefers-reduced-motion:no-preference){.tile,.b,.sbtn,.seg button,.nav button{transition:background-color .15s,border-color .15s,color .15s}}
 @media (min-width:560px){.tiles{grid-template-columns:repeat(4,1fr)}.filters{grid-template-columns:repeat(4,1fr)}}
 </style>
@@ -284,19 +293,32 @@ P("p14","Instituto Secundario y Superior (Solís 283)","Secundario","Villa Carlo
 P("p15","IPEM N.º 190 Dr. Pedro A. M. Carande Carro","Secundario","Villa Carlos Paz","Punilla","Chile, Las Malvinas 1770","543541438263",null,0,"ChIJC4s4e7ZnLZQROn41tD1tH-M","","140287000"),
 P("p16","Instituto García Ferré","Primario (6.º grado)","Villa Carlos Paz","Punilla","Av. Ramón J. Cárcano 932","543517701230",4.4,23,"ChIJzWkS0UpmLZQRUer0qCXvOTE","Según las reseñas no tiene secundario y no figura con secundario en el padrón.")];
 var PREM={};PRE.forEach(function(p){PREM[p.id]=p});
-/* Competencia: datos de Google Maps al 13/11/2026 */
+/* Competencia. Córdoba: Google Maps al 13/11/2026. Buenos Aires: sus webs al 17/11/2026. hoy = elegidas para llamar hoy (3 de Córdoba y 3 de Buenos Aires) */
 var CP=[
-{id:"c1",nombre:"Forever Egresados",rol:"Especialista · también hace uniformes para empresas",dir:"Juan A. Sarachaga 850",tel:"",telt:"",cel:false,hor:"Lunes a viernes, mañana y tarde",rating:4.6,n:100,pid:"ChIJ5dv5cF2YMpQRiCoFz45E1ug",el:"Atención amable, prendas de prueba para medir talles, entrega a tiempo y muchas formas de pago.",cr:"Una reseña cuenta que lo prometido para febrero llegó a fines de marzo y que la bandera llegó mucho después."},
-{id:"c2",nombre:"Dreamers Egresados",rol:"Especialista",dir:"Juan A. Sarachaga 1252",tel:"543513120965",telt:"0351 312-0965",cel:false,hor:"Lunes a viernes, 10 a 18",rating:4.6,n:92,pid:"ChIJ-39XELuZMpQR-U_Zg6wS4Ak",el:"Calidad, diseño, entrega a tiempo y facilidades de pago. Tiene un cliente de Bell Ville.",cr:"Sin quejas en las reseñas visibles."},
-{id:"c3",nombre:"Mi Buzo de Egresados",rol:"Especialista · chico o nuevo",dir:"Mendoza 2123",tel:"543518131935",telt:"0351 813-1935",cel:false,hor:"Lunes a viernes, 9 a 18",rating:4.8,n:16,pid:"ChIJA2GpQXqiMpQRoc8X4CwDGhg",el:"El dueño asesora sobre telas, talles y diseño. Buena calidad y plazos cumplidos.",cr:"Sin quejas visibles, pero son solo 16 reseñas."},
-{id:"c4",nombre:"Grad Buzos de Egresados",rol:"Especialista · fabricante",dir:"Juan Carlos Castagnino 2212, local 9",tel:"543513654514",telt:"0351 365-4514",cel:false,hor:"Martes y jueves, 10 a 13 y 14 a 17",rating:3.3,n:170,pid:"ChIJIf-rEtiZMpQR_TQVdwcc2Fo",el:"Condiciones claras, plazos cumplidos y tela que no suelta pelusa ni destiñe, según varios cursos.",cr:"Ropa que se encogió y perdió color en menos de dos meses, y entregas tardías en una promo 2026."},
-{id:"c5",nombre:"MASHIPA Egresados",rol:"Especialista",dir:"Julio A. Roca 948",tel:"543517061200",telt:"0351 706-1200",cel:false,hor:"Lunes a viernes, 8:30 a 17",rating:3.6,n:163,pid:"ChIJz30xi86ZMpQR3PiOmPzzy1w",el:"Ninguna en las reseñas visibles.",cr:"Un mes de atraso, talles y nombres mal, tela defectuosa o que pica, bordado desteñido y nadie atiende teléfono ni mensajes."},
-{id:"c6",nombre:"Creaciones Perla",rol:"Relacionado · uniformes escolares",dir:"Juan Antonio Lavalleja 2455",tel:"",telt:"",cel:false,hor:"Lunes a sábado",rating:4.1,n:1402,pid:"ChIJ_6hoN0OYMpQRFxqvbmbcamY",el:"Buena atención y uniformes que duran años.",cr:"Una reseña critica la calidad de las camisas de este año. En febrero y marzo hay mucha gente."},
-{id:"c7",nombre:"Apunto Bordados",rol:"Relacionado · bordados y ropa de trabajo",dir:"Entre Ríos 290",tel:"5493517482847",telt:"351 748-2847 (celular)",cel:true,hor:"Lunes a viernes, 9 a 17:30. Sábado, 9 a 13",rating:4.3,n:81,pid:"ChIJp5lyMJuiMpQRQGovOur6ol8",el:"Buena calidad por el precio en camperas y gorras.",cr:"Reseñas que dicen que arruinaron prendas al bordar y no se hicieron cargo."}];
+{id:"c1",zona:"Córdoba",nombre:"Forever Egresados",rol:"Especialista · también hace uniformes para empresas",dir:"Juan A. Sarachaga 850",tel:"",cel:false,hor:"Lunes a viernes, mañana y tarde",rating:4.6,n:100,pid:"ChIJ5dv5cF2YMpQRiCoFz45E1ug",el:"Atención amable, prendas de prueba para medir talles, entrega a tiempo y muchas formas de pago.",cr:"Una reseña cuenta que lo prometido para febrero llegó a fines de marzo y que la bandera llegó mucho después.",nota:"No tiene teléfono en Maps: escribirle por Instagram o ir al local."},
+{id:"c2",zona:"Córdoba",hoy:true,nombre:"Dreamers Egresados",rol:"Especialista",dir:"Juan A. Sarachaga 1252",tel:"543513120965",cel:false,hor:"Lunes a viernes, 10 a 18",rating:4.6,n:92,pid:"ChIJ-39XELuZMpQR-U_Zg6wS4Ak",el:"Calidad, diseño, entrega a tiempo y facilidades de pago. Tiene un cliente de Bell Ville.",cr:"Sin quejas en las reseñas visibles."},
+{id:"c3",zona:"Córdoba",hoy:true,nombre:"Mi Buzo de Egresados",rol:"Especialista · chico o nuevo",dir:"Mendoza 2123",tel:"543518131935",cel:false,hor:"Lunes a viernes, 9 a 18",rating:4.8,n:16,pid:"ChIJA2GpQXqiMpQRoc8X4CwDGhg",el:"El dueño asesora sobre telas, talles y diseño. Buena calidad y plazos cumplidos.",cr:"Sin quejas visibles, pero son solo 16 reseñas."},
+{id:"c4",zona:"Córdoba",hoy:true,nombre:"Grad Buzos de Egresados",rol:"Especialista · fabricante",dir:"Juan Carlos Castagnino 2212, local 9",tel:"543513654514",cel:false,hor:"Martes y jueves, 10 a 13 y 14 a 17",rating:3.3,n:170,pid:"ChIJIf-rEtiZMpQR_TQVdwcc2Fo",ig:"gradegresados",el:"Condiciones claras, plazos cumplidos y tela que no suelta pelusa ni destiñe, según varios cursos.",cr:"Ropa que se encogió y perdió color en menos de dos meses, y entregas tardías en una promo 2026.",nota:"Su Instagram muestra otro local: Galería Precedo, Av. Rafael Núñez 3868. Confirmar si es el mismo negocio."},
+{id:"c5",zona:"Córdoba",nombre:"MASHIPA Egresados",rol:"Especialista",dir:"Julio A. Roca 948",tel:"543517061200",cel:false,hor:"Lunes a viernes, 8:30 a 17",rating:3.6,n:163,pid:"ChIJz30xi86ZMpQR3PiOmPzzy1w",el:"Ninguna en las reseñas visibles.",cr:"Un mes de atraso, talles y nombres mal, tela defectuosa o que pica, bordado desteñido y nadie atiende teléfono ni mensajes."},
+{id:"c8",zona:"Córdoba",nombre:"Ëfecto Egresados",rol:"Especialista · encontrado en Instagram",dir:"",tel:"",cel:false,hor:"",rating:null,n:0,pid:"",ig:"efectoegresados",el:"Se presenta como conjuntos de egresados con compromiso y calidad, en la provincia de Córdoba.",cr:"Sin reseñas encontradas.",nota:"Falta todo: escribirle por Instagram para conseguir teléfono y condiciones."},
+{id:"c6",zona:"Córdoba",nombre:"Creaciones Perla",rol:"Relacionado · uniformes escolares",dir:"Juan Antonio Lavalleja 2455",tel:"",cel:false,hor:"Lunes a sábado",rating:4.1,n:1402,pid:"ChIJ_6hoN0OYMpQRFxqvbmbcamY",el:"Buena atención y uniformes que duran años.",cr:"Una reseña critica la calidad de las camisas de este año. En febrero y marzo hay mucha gente."},
+{id:"c7",zona:"Córdoba",nombre:"Apunto Bordados",rol:"Relacionado · bordados y ropa de trabajo",dir:"Entre Ríos 290",tel:"5493517482847",cel:true,hor:"Lunes a viernes, 9 a 17:30. Sábado, 9 a 13",rating:4.3,n:81,pid:"ChIJp5lyMJuiMpQRQGovOur6ol8",el:"Buena calidad por el precio en camperas y gorras.",cr:"Reseñas que dicen que arruinaron prendas al bordar y no se hicieron cargo."},
+{id:"b1",zona:"Buenos Aires",hoy:true,nombre:"Das Mas",rol:"Fábrica propia · vende a todo el país",dir:"Plumerillos 1485, Boulogne, San Isidro",ciudad:"Buenos Aires",tel:"5491168164495",cel:true,hor:"Lunes a viernes, 8 a 16",rating:null,n:0,ig:"dasmasegresados",web:"https://www.dasmas.com.ar/",mail:"info@dasmas.com.ar",
+ sabe:["Más de 15 años fabricando buzos de egresados para todo el país.","Envío gratis a toda Argentina y garantía todo el año.","Pagos: efectivo, transferencia, Rapipago y Pago Fácil.","Muestra clientes de Entre Ríos, La Pampa, Santiago del Estero y provincia de Buenos Aires: ya venden en el interior."]},
+{id:"b2",zona:"Buenos Aires",hoy:true,nombre:"T-Shaped",rol:"Buzos y remeras de egresados · venta online",dir:"Capital Federal",ciudad:"Buenos Aires",tel:"5491150007422",cel:true,hor:"Lunes a viernes, 10 a 15",rating:null,n:0,ig:"tshaped_egresados",web:"https://www.tshaped.com.ar/",mail:"infotshaped@gmail.com",
+ sabe:["Tela: frisa 50% algodón y 50% poliéster, para que no encoja. Prueban que no destiña y revisan costuras.","Mandan un juego de prendas para probar talles a cualquier parte del país.","Si el curso tiene más de 40 alumnos, dan 2 camperas gratis (\"liberados\").","Pagos: transferencia, depósito, Ualá, Mercado Pago. Cuotas: 3 y 6 con interés.","Contrato, boceto digital, fecha de entrega fija, envío gratis y 15 días para cambios.","Suspendieron presupuestos de la promo 2026 por exceso de pedidos: están llenos."]},
+{id:"b3",zona:"Buenos Aires",hoy:true,nombre:"GOAR",rol:"Egresados de secundaria y primaria · 4 locales",dir:"Ciudad de la Paz 2467, Belgrano",ciudad:"Buenos Aires",tel:"5491158445385",cel:true,hor:"",rating:null,n:0,web:"https://www.goar.com.ar/",mail:"info@goar.com.ar",
+ sabe:["Locales en Belgrano, Ramos Mejía, Lanús y Villa Bosch. Teléfono fijo: (011) 2196-9441.","Cuotas fijas y en pesos.","Garantía todo el año y envíos a todo el país.","También hacen egresados de primaria y de jardín (\"egresaditos\")."]},
+{id:"b4",zona:"Buenos Aires",nombre:"Follow Me",rol:"Cadena nacional · 16 sucursales",dir:"",ciudad:"",tel:"",cel:false,hor:"",rating:null,n:0,
+ sabe:["Según una nota de abril de 2025: mínimo 15 prendas por curso y prendas personalizadas desde $40.000.","Tiene 16 sucursales y 25 puntos de venta, y un showroom móvil que recorre el país."],nota:"No encontré teléfono: buscar su Instagram o la sucursal más cercana."}];
+/* Lo que hay que preguntarle a cada uno */
+var PREG=["¿Cuál es el mínimo de prendas por curso?","¿Cuánto sale el buzo y cuánto la campera? ¿Qué incluye (bordado, estampa, nombre)?","¿Qué tela usan? ¿Encoge o destiñe?","¿Cuánto tardan desde que se aprueba el diseño?","¿Cómo se paga: seña, cuotas, con o sin interés?","¿Hay regalos o beneficios por cantidad (prendas gratis, bandera, descuento)?","¿Mandan a otras provincias? ¿Cuánto sale el envío?","¿Mandan prendas de muestra para probar talles?"];
+var MSGC="Hola, ¿cómo están? Quería consultarles por buzos y camperas de egresados. ¿Me podrían pasar el mínimo de prendas por curso, precios, qué tela usan, plazo de entrega, formas de pago y cuotas, y si tienen algún beneficio por cantidad? ¡Muchas gracias!";
 var REP=["Lo que más premian: entrega en fecha, pago en cuotas, ayuda para elegir telas y talles, y respuesta rápida.","Lo que más castigan: atrasos de un mes, talles o nombres mal, telas que se encogen o pierden color, y mensajes sin respuesta.","Los dos mejor puntuados (Forever y Dreamers, 4,6) cumplen plazos y ofrecen cuotas. Los dos peor puntuados (Grad 3,3 y Mashipa 3,6) fallan en plazos y errores."];
 var OPO=["Fecha de entrega por escrito y cumplida: es el reclamo más repetido.","Prendas de prueba para medir talles, que se elogia de Forever, y revisión de talles y nombres antes de entregar.","Respuesta rápida por WhatsApp: varias quejas son por no contestar.","Cuotas claras: los mejor puntuados las ofrecen, así que hay que igualarlas.","El interior no está vacío: Dreamers ya tiene un cliente en Bell Ville."];
-var CIN=[["pbuzo","Precio del buzo"],["pcamp","Precio de la campera"],["pmin","Mínimo de prendas"],["pcuo","Seña y cuotas"],["pplz","Plazo de entrega"],["pred","Instagram o web"]];
-var S={items:[],cfg:{nombre:"",empresa:"",limite:30,resp:DEF},f:"todas",open:null,nota:null,borrar:null,dpto:"",nivel:"",etapa:"",ciudad:"",tab:"colegios",zf:"todas",zonas:{},comp:{},cd:null,del:[],lq:"",ld:"",lz:"todas",lo:"eg",lopen:{}};
+var CIN=[["pmin","Mínimo de prendas"],["pbuzo","Precio del buzo"],["pcamp","Precio de la campera"],["pplz","Plazo de entrega"],["pcuo","Formas de pago, seña y cuotas"],["ptela","Tela y calidad"],["preg","Regalos o beneficios por cantidad"],["penv","Envío al interior"],["pmue","Prendas de muestra para talles"],["pred","Instagram o web"]];
+var CZ=[["todas","Todas"],["hoy","Para llamar hoy"],["Córdoba","Córdoba"],["Buenos Aires","Buenos Aires"]];
+var S={items:[],cfg:{nombre:"",empresa:"",limite:30,resp:DEF},f:"todas",open:null,nota:null,borrar:null,dpto:"",nivel:"",etapa:"",ciudad:"",tab:"colegios",zf:"todas",zonas:{},comp:{},cd:null,del:[],lq:"",ld:"",lz:"todas",lo:"eg",lopen:{},cz:"todas"};
 
 /* ---------- Padrón: escuelas y localidades ---------- */
 function sinTilde(s){return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim()}
@@ -416,7 +438,7 @@ function sum(){var el=document.getElementById("sum"),t=document.getElementById("
 t.textContent={colegios:"Mi lista",localidades:"Buscar colegios",zonas:"Zonas",competencia:"Competencia"}[S.tab];
 if(S.tab==="zonas"){el.textContent="Interior: 640 colegios y 20.947 egresados por año";return}
 if(S.tab==="localidades"){el.textContent=PADRON?fm(ESC.length)+" escuelas en "+fm(LOC.length)+" localidades":"Falta cargar el padrón";return}
-if(S.tab==="competencia"){el.textContent="Fábricas de egresados en Córdoba capital";return}
+if(S.tab==="competencia"){el.textContent=CP.length+" fábricas · Córdoba y Buenos Aires · de peor a mejor";return}
 el.textContent=S.items.length+(S.items.length===1?" colegio":" colegios")+" en tu lista"}
 function rTabs(){document.getElementById("tabs").innerHTML=TABS.map(function(x){return'<button data-t="'+x[0]+'" class="'+(S.tab===x[0]?"on":"")+'"'+(S.tab===x[0]?' aria-current="page"':"")+">"+IC[x[2]]+x[1]+"</button>"}).join("");
 TABS.forEach(function(x){document.getElementById("v-"+x[0]).hidden=S.tab!==x[0]})}
@@ -435,7 +457,7 @@ fv("cn",S.cfg.nombre);fv("ce",S.cfg.empresa);fv("cl",S.cfg.limite);fv("rs",S.cfg
 function card(i){var id=esc(i.id),d=days(i),c=COL[i.estado]||COL["Sin contacto"];
 var when=d===null?["Sin contacto","var(--new)","var(--newsoft)"]:retomar(i)?["hace "+d+" días","var(--bad)","var(--badsoft)"]:aviso(i)?["hace "+d+" días","var(--warn)","var(--warnsoft)"]:[d===0?"Hablaste hoy":d===1?"Ayer":"hace "+d+" días","var(--brand)","var(--brandsoft)"];
 var bar=retomar(i)?"var(--bad)":c[0];
-var tags=[[i.nivel+(i.sector?" "+i.sector.toLowerCase():""),""],[i.eg?"~"+i.eg+" egresados":"",""],[et(i),"info"],[i.rating?"★ "+fr(i.rating)+" ("+i.nres+")":"",""],[i.origen==="referido"?"Referido":"","info"],[i.cue?"En el padrón":"","ok"]].filter(function(x){return x[0]});
+var tags=[[i.nivel+(i.sector?" "+i.sector.toLowerCase():""),""],[i.eg?"~"+i.eg+" egresados":"",""],[et(i),"tinfo"],[i.rating?"★ "+fr(i.rating)+" ("+i.nres+")":"",""],[i.origen==="referido"?"Referido":"","tinfo"],[i.cue?"En el padrón":"","ok"]].filter(function(x){return x[0]});
 var quien=[i.contacto?"Hablar con "+i.contacto:"",i.decide?"deciden en "+i.decide:""].filter(Boolean).join(" · ");
 var ops=EST.map(function(s){return'<option'+(s===i.estado?" selected":"")+">"+s+"</option>"}).join("");
 var aviso2=i.nota&&String(i.id).charAt(0)==="p"&&!i.ultimo&&/^(Confirmar|En Solís|Según)/.test(i.nota)?'<p class="line" style="margin-top:8px;color:var(--warn)">'+esc(i.nota)+"</p>":"";
@@ -492,19 +514,32 @@ return'<article class="card" style="--c:'+(d[4]?"var(--brand)":"var(--line)")+'"
 +'<p class="detail">Unos '+Math.round(d[2]/d[1])+" egresados por colegio · "+d[1]+" colegios en el anuario</p>"
 +'<div class="state"><label for="z-'+esc(d[0])+'">Etapa</label><select class="zsel" style="width:auto" id="z-'+esc(d[0])+'" data-z="'+esc(d[0])+'">'+eo+"</select></div>"
 +'<div class="big"><button class="b add" data-a="vl" data-d="'+esc(d[0])+'">'+IC.search+'Ver localidades</button><button class="b go" data-a="vz" data-d="'+esc(d[0])+'">'+IC.list+"Mi lista</button></div></article>"}).join("")}
+function colComp(c){return c.rating==null?["var(--mute)","var(--soft)","Sin puntaje"]:c.rating>=4.5?["var(--ok)","var(--oksoft)","Bueno"]:c.rating<3.7?["var(--bad)","var(--badsoft)","Malo"]:["var(--warn)","var(--warnsoft)","Regular"]}
 function rComp(){
 var li=function(x){return"<li>"+esc(x)+"</li>"};
-var h='<div class="info"><h3>Lo que se repite en las reseñas</h3><ul>'+REP.map(li).join("")+'</ul></div><div class="info"><h3>Dónde se puede ganar</h3><ul>'+OPO.map(li).join("")+"</ul></div>"
-+'<div class="big"><button class="b add" data-a="cx">Copiar comparativa para Sheets</button></div><p class="msg" id="cm" style="margin:8px 2px 0"></p>';
-h+='<div class="list">'+CP.map(function(c){var v=S.comp[c.id]||{},tiene=Object.keys(v).some(function(k){return v[k]});
-var col=c.rating>=4.5?["var(--ok)","var(--oksoft)"]:c.rating<3.7?["var(--bad)","var(--badsoft)"]:["var(--warn)","var(--warnsoft)"];
-var o='<article class="card" style="--c:'+col[0]+'"><div class="ch"><div style="min-width:0"><h3>'+esc(c.nombre)+'</h3><p class="where">'+esc(c.rol)+'</p></div><span class="when" style="--wc:'+col[0]+";--wbg:"+col[1]+'">★ '+fr(c.rating)+" ("+fm(c.n)+")</span></div>"
-+'<div class="kv"><div><b>Elogian:</b> '+esc(c.el)+"</div><div><b>Critican:</b> "+esc(c.cr)+"</div><div><b>Horario:</b> "+esc(c.hor)+"</div></div>"
-+contacto({tel:c.tel,cel:c.cel,dir:c.dir,wa:"https://wa.me/"+c.tel,go:dirUrl(c.nombre,c.dir,"Córdoba",c.pid)})
-+'<div class="small" style="grid-template-columns:1fr 1fr"><button class="sbtn'+(S.cd===c.id?" on":"")+(tiene?" dot":"")+'" data-a="cd" data-c="'+c.id+'">Precios y datos</button><a class="sbtn" target="_blank" rel="noopener" href="'+mapUrl(c.nombre,c.dir,"Córdoba",c.pid)+'">Ver reseñas en Maps</a></div>';
-if(S.cd===c.id)o+='<div class="panel compform">'+CIN.map(function(x){return'<input class="field ci" id="ci-'+c.id+"-"+x[0]+'" data-c="'+c.id+'" data-k="'+x[0]+'" placeholder="'+x[1]+'" aria-label="'+x[1]+'" value="'+esc(v[x[0]]||"")+'">'}).join("")+'<textarea class="nt ci" id="ci-'+c.id+'-nota" data-c="'+c.id+'" data-k="nota" placeholder="Notas" aria-label="Notas">'+esc(v.nota||"")+"</textarea></div>";
-return o+"</article>"}).join("")+"</div>";
-h+='<p class="note">Datos de Google Maps al 13/11/2026. Maps mostró 5 reseñas por negocio, así que es una muestra y no el total. Faltan precios: completalos en cada ficha con "Precios y datos".</p>';
+var arr=CP.filter(function(c){return S.cz==="todas"||(S.cz==="hoy"?c.hoy:c.zona===S.cz)}).sort(function(a,b){if(a.rating==null&&b.rating==null)return a.nombre.localeCompare(b.nombre);if(a.rating==null)return 1;if(b.rating==null)return-1;return a.rating-b.rating||b.n-a.n});
+var hechos=CP.filter(function(c){return c.hoy&&(S.comp[c.id]||{}).cont}).length;
+var h='<div class="info"><h3>Qué significan los colores</h3><p style="margin:0 0 8px">Es el puntaje de Google Maps (de 1 a 5 estrellas) que les dan sus clientes. La lista va <b>del peor al mejor</b>.</p><div class="legend"><span><i style="background:var(--bad)"></i>Rojo: menos de 3,7 · muchas quejas</span><span><i style="background:var(--warn)"></i>Amarillo: de 3,7 a 4,4 · regular</span><span><i style="background:var(--ok)"></i>Verde: 4,5 o más · bien puntuado</span><span><i style="background:var(--mute)"></i>Gris: sin puntaje en Maps (las de Buenos Aires las saqué de su web)</span></div></div>'
++'<div class="seg" style="margin-top:12px">'+CZ.map(function(x){return'<button data-cz="'+x[0]+'" class="'+(S.cz===x[0]?"on":"")+'">'+x[1]+(x[0]==="hoy"?" ("+hechos+"/6)":"")+"</button>"}).join("")+"</div>";
+if(S.cz==="hoy")h+='<div class="info"><h3>Para Mauricio: 3 de Córdoba y 3 de Buenos Aires</h3><p style="margin:0 0 6px">Preguntale esto a cada una y anotá las respuestas en "Anotar respuestas". El botón WhatsApp ya lleva la consulta escrita.</p><ol class="qs">'+PREG.map(li).join("")+"</ol></div>";
+h+='<div class="list">'+arr.map(function(c){var v=S.comp[c.id]||{},tiene=CIN.some(function(x){return v[x[0]]}),col=colComp(c);
+var punt=c.rating==null?"Sin puntaje":"★ "+fr(c.rating)+" ("+fm(c.n)+")";
+var o='<article class="card" style="--c:'+col[0]+'"><div class="ch"><div style="min-width:0"><h3>'+esc(c.nombre)+'</h3><p class="where">'+esc(c.zona)+" · "+esc(c.rol)+'</p></div><span class="when" style="--wc:'+col[0]+";--wbg:"+col[1]+'">'+punt+"</span></div>"
++'<div class="tags">'+(c.rating!=null?'<span class="tag" style="background:'+col[1]+";color:"+col[0]+'">'+col[2]+"</span>":"")+(c.hoy?'<span class="tag tinfo">Para llamar hoy</span>':"")+(v.cont?'<span class="tag ok">Contactado el '+esc(v.cont.split("-").reverse().join("/"))+"</span>":"")+"</div>"
++'<div class="kv">'+(c.el?"<div><b>Elogian:</b> "+esc(c.el)+"</div>":"")+(c.cr?"<div><b>Critican:</b> "+esc(c.cr)+"</div>":"")+(c.sabe?"<div><b>Lo que dice su web:</b><ul>"+c.sabe.map(li).join("")+"</ul></div>":"")+(c.hor?"<div><b>Horario:</b> "+esc(c.hor)+"</div>":"")+(c.nota?'<div style="color:var(--warn)">'+esc(c.nota)+"</div>":"")+"</div>"
++contacto({tel:c.tel,cel:c.cel,mail:c.mail,dir:c.dir,wa:c.tel?"https://wa.me/"+(c.cel?"549"+digitos(c.tel):digitos(c.tel))+"?text="+encodeURIComponent(MSGC):"",go:dirUrl(c.nombre,c.dir,c.ciudad||"Córdoba",c.pid)})
++'<div class="small" style="grid-template-columns:1fr 1fr">'
++'<button class="sbtn'+(S.cd===c.id?" on":"")+(tiene?" dot":"")+'" data-a="cd" data-c="'+c.id+'">Anotar respuestas</button>'
++'<button class="sbtn" data-a="cc" data-c="'+c.id+'">'+(v.cont?"Contactado ✓":"Ya lo contacté")+"</button>"
++(c.ig?'<a class="sbtn" target="_blank" rel="noopener" href="https://www.instagram.com/'+esc(c.ig)+'/">Instagram</a>':"")
++(c.web?'<a class="sbtn" target="_blank" rel="noopener" href="'+esc(c.web)+'">Su web</a>':"")
++(c.pid?'<a class="sbtn" target="_blank" rel="noopener" href="'+mapUrl(c.nombre,c.dir,"Córdoba",c.pid)+'">Reseñas en Maps</a>':"")
++"</div>";
+if(S.cd===c.id)o+='<div class="panel compform"><p>Se guarda solo mientras escribís.</p>'+CIN.map(function(x){return'<label class="cl">'+x[1]+'<input class="field ci" id="ci-'+c.id+"-"+x[0]+'" data-c="'+c.id+'" data-k="'+x[0]+'" value="'+esc(v[x[0]]||"")+'"></label>'}).join("")+'<label class="cl">Otras notas<textarea class="nt ci" id="ci-'+c.id+'-nota" data-c="'+c.id+'" data-k="nota">'+esc(v.nota||"")+"</textarea></label></div>";
+return o+"</article>"}).join("")+"</div>"
++'<div class="info"><h3>Lo que se repite en las reseñas de Córdoba</h3><ul>'+REP.map(li).join("")+'</ul></div><div class="info"><h3>Dónde se puede ganar</h3><ul>'+OPO.map(li).join("")+"</ul></div>"
++'<div class="big"><button class="b add" data-a="cx">Copiar comparativa para Sheets</button></div><p class="msg" id="cm" style="margin:8px 2px 0"></p>'
++'<p class="note">Córdoba: Google Maps al 13/11/2026 (5 reseñas visibles por negocio, es una muestra). Buenos Aires: lo que dicen sus propias webs al 17/11/2026, sin verificar. Follow Me: nota de prensa de abril de 2025. Ëfecto: perfil de Instagram.</p>';
 document.getElementById("clist").innerHTML=h}
 function render(){sum();rTabs();if(S.tab==="colegios")rCol();if(S.tab==="localidades")rLoc();if(S.tab==="zonas")rZon();if(S.tab==="competencia")rComp()}
 function setTab(t){S.tab=t;S.borrar=null;try{history.replaceState(null,"","#"+t)}catch(e){try{location.hash=t}catch(x){}}render();window.scrollTo(0,0)}
@@ -526,13 +561,15 @@ if(a==="la"){var l=LOCM[t.dataset.k];if(l){l.esc.forEach(agregar);S.lopen[l.k]=t
 if(a==="rs"){S.open=S.open===t.dataset.id?null:t.dataset.id;render()}
 if(a==="nt"){S.nota=S.nota===t.dataset.id?null:t.dataset.id;render();var ta=document.getElementById("nt"+t.dataset.id);if(ta)ta.focus()}
 if(a==="cd"){S.cd=S.cd===t.dataset.c?null:t.dataset.c;render()}
+if(t.dataset.cz){S.cz=t.dataset.cz;render()}
+if(a==="cc"){var cc=t.dataset.c;S.comp[cc]=S.comp[cc]||{};S.comp[cc].cont=S.comp[cc].cont?"":ago(0);guardarAjustes();render()}
 if(a==="cp"){copiar(t.dataset.v,t,"Copiado")}
 if(a==="copy"){var m=reps()[t.dataset.k].m;copiar(m,t,"Copiado. Pegalo en el chat.")}
 if(a==="hoy"){var i=find(t.dataset.id);i.ultimo=ago(0);if(i.estado==="Sin contacto")i.estado="Contactado";guardarItem(i);render()}
 if(a==="del"){var id=String(t.dataset.id);if(S.borrar!==id){S.borrar=id;render();return}
 S.borrar=null;if(S.del.indexOf(id)<0)S.del.push(id);S.items=S.items.filter(function(i){return String(i.id)!==id});borrarItem(id);render()}
 if(a==="cx"){var cl=function(s){return String(s==null?"":s).replace(/[\t\r\n]+/g," ")};
-var rows=[["Competidor","Puntaje","Reseñas","Dirección","Teléfono","Precio buzo","Precio campera","Mínimo","Seña y cuotas","Plazo","Redes o web","Notas"]].concat(CP.map(function(c){var v=S.comp[c.id]||{};return[c.nombre,c.rating,c.n,c.dir,c.telt,v.pbuzo,v.pcamp,v.pmin,v.pcuo,v.pplz,v.pred,v.nota]}));
+var rows=[["Competidor","Zona","Puntaje Maps","Reseñas","Teléfono","Instagram o web"].concat(CIN.slice(0,9).map(function(x){return x[1]}),["Notas","Contactado","Lo que dice su web"])].concat(CP.map(function(c){var v=S.comp[c.id]||{};return[c.nombre,c.zona,c.rating==null?"":fr(c.rating),c.n||"",c.tel?telLindo(c.tel):"",v.pred||(c.ig?"@"+c.ig:c.web||"")].concat(CIN.slice(0,9).map(function(x){return v[x[0]]||""}),[v.nota||"",v.cont||"",(c.sabe||[]).join(" ")])}));
 copiar(rows.map(function(r){return r.map(cl).join(TB)}).join(NL),document.getElementById("cm"),"Copiado. Pegalo en la celda A1 de una hoja de Google.")}});
 document.addEventListener("change",function(e){var t=e.target;
 if(t.dataset.s){S[t.dataset.s]=t.value;if(t.dataset.s==="dpto")S.ciudad="";render();return}
