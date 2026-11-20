@@ -42,6 +42,35 @@ Con eso, la urgencia queda así:
 
 ## 🔴 URGENTE
 
+### 0. Fallas técnicas que reportó el complejo (van primero)
+Son 5 unidades: 3 departamentos para 2 personas y 2 casitas para 4. Revisar **las 5**, aunque la falla se haya visto en una sola.
+
+#### a) Ducha que "a veces no abre bien" — Medio (vos o plomero)
+Causa más probable: **sarro** en el vástago, cuerito o cartucho de la llave. El agua de las sierras es dura, y con agua muy caliente (ver punto b) el sarro se forma más rápido.
+1. Cortá el agua de esa unidad (llave de paso del baño o del departamento).
+2. Sacá la tapita o el volante de la llave de la ducha y desenroscá el vástago o cartucho con llave francesa.
+3. Mirá el estado del cuerito o cartucho: si está duro, roto o con sarro, **llevalo a la ferretería y comprá uno igual** (cueritos y vástagos cuestan poco).
+4. Limpiá el asiento con vinagre y un cepillo, poné el repuesto y volvé a armar.
+5. Si es monocomando (una sola palanca), lo que se cambia es el **cartucho**. Sacale foto a la marca y modelo antes de comprar.
+6. Si después de esto sigue fallando o la presión es baja en general, puede ser la cañería o el tanque: **plomero.**
+
+#### b) Termos solares: el agua sale muy caliente — Urgente (seguridad)
+Es **riesgo de quemadura** (en verano un termosolar pasa los 70–80 °C) y además gasta las griferías.
+- **Solución de fondo:** instalar una **válvula mezcladora termostática** a la salida de cada termo. Mezcla agua fría automáticamente y entrega siempre la temperatura que se le fija (ej. 45 °C). Instalación de plomero, 1 hora por termo aprox.
+  - Referencia: [válvula termostática mezcladora 1" (Mercado Libre)](https://www.mercadolibre.com.ar/valvula-termostatica-mezcladora--1-pulgada/up/MLAU263965561). Pedir cotización según la medida del caño (3/4" o 1"). También consultar al vendedor o instalador del termo solar, que suele tenerlas.
+- **Mientras tanto:**
+  - Cartel en el baño: *"El agua caliente es solar y en verano sale muy caliente: abrí primero la fría."*
+  - Si el termo tiene resistencia eléctrica de apoyo, **apagarla en verano**.
+  - Si tiene cubierta o se puede tapar parte del colector, consultar al instalador.
+
+#### c) Horno eléctrico: las hornallas calientan lento — Fácil / reemplazo
+Las hornallas eléctricas de resistencia son lentas por naturaleza (5–10 min), pero si es más que eso:
+1. Revisá que estén **limpias y planas**: la grasa quemada aísla.
+2. **Ollas de fondo plano y grueso** del mismo tamaño que la hornalla. Una olla abollada o chica calienta mucho más lento.
+3. Probá cada hornalla en máximo con un litro de agua y medí el tiempo. Si una tarda bastante más que las otras, la **resistencia está fallando** y se cambia (servicio técnico de la marca).
+4. Opción de mejora a mediano plazo: un **anafe de inducción** de 1 o 2 hornallas, mucho más rápido. Requiere ollas aptas para inducción.
+5. Para el huésped: dejar la **pava eléctrica** a mano para hervir agua rápido, y aclararlo en la guía de bienvenida.
+
 ### 1. Juntar las hojas secas — Fácil
 **Para qué:** es lo primero que ve el huésped. Además, las hojas acumuladas juntan bichos y tapan desagües.
 
