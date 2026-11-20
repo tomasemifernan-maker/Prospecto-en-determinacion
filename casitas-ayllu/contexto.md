@@ -96,8 +96,9 @@ Requisitos: cómoda en celular y compu. Empezar por lo más simple (módulos 1 y
 - Capturas del Instagram.
 
 ## Identidad visual (sacada del Instagram, 20/11/2026)
-- **Logo:** una "A" dentro de un rosetón con detalles, en color óxido. Wordmark "casitas" chiquito arriba de "Ayllu".
-- **Colores de marca:**
+- **Logo:** una "A" dentro de un rosetón con detalles, en color óxido sobre fondo café casi negro. Wordmark "casitas" chiquito arriba de "Ayllu".
+- **Colores del logo (los que usa el organizador):** óxido #A8442A, café casi negro #1F1613 y crema #F6EFE6.
+- **Otros colores de las publicaciones:**
   - Óxido o terracota del logo: #9B3B22
   - Vino o bordó (flyers de octubre): #5C1C2E
   - Crema de las franjas de contacto: #F5EFE7
