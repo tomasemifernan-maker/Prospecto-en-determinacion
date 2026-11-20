@@ -31,10 +31,11 @@ Instagram: [@casitasayllu](https://www.instagram.com/casitasayllu)
 
 ## El lugar
 - Santa Mónica, Santa Rosa de Calamuchita, sierras de Córdoba.
-- **5 unidades** dentro de la casona, divididas por paredes:
-  - 3 departamentos para 2 personas.
-  - 2 casitas para 4 personas.
-- Cada unidad: aire frío/calor, cocina, horno eléctrico con hornallas, pava, heladera y utensilios.
+- **5 casitas** dentro de la casona, divididas por paredes:
+  - Casitas 1 y 2: hasta 4 personas.
+  - Casitas 3, 4 y 5: para 2 personas.
+- Todas: aire acondicionado inverter, heladera, agua fría y caliente, utensilios de cocina y Smart TV.
+- Casitas 2, 4 y 5 (las más nuevas): horno eléctrico con anafe eléctrico. Casitas 1 y 3: cocina a gas.
 - Comunes: parque, mesa tipo yankee con guirnaldas, parcelas de madera con asador.
 - Entorno: vista a las montañas, río para meterse a 5 cuadras, comercios a 5 cuadras, Calicanto y bosque nativo junto al río.
 - Público: gente de Buenos Aires y alrededores que busca sierras, descanso y naturaleza.
@@ -69,7 +70,12 @@ Instagram: [@casitasayllu](https://www.instagram.com/casitasayllu)
   - QR de reseñas: pedirlas a todos, sin regalos a cambio, y responder cada una.
 - **Fase 3 (después del verano):** revisar números y ajustar precios para temporada baja.
 
-## App organizadora (pedido nuevo)
+## Organizador de ideas (app)
+- Publicado en https://claude.ai/artifact/MCHLyz7XLP3RXJgjpbFSoZ (archivo `organizador.html`).
+- Cada idea tiene 4 marcas: urgencia, facilidad, rapidez y dinero. Tomás la edita desde el celular y Claude la actualiza cuando él cuenta avances.
+- **No** lleva reservas: eso se descartó.
+
+## Ideas de módulos (descartado por ahora)
 Módulos deseados, en orden:
 1. Calendario de reservas por unidad, sin superposiciones.
 2. Registro de consultas: fecha, origen, si reservó, noches, unidad.

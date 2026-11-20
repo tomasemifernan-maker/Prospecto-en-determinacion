@@ -1,0 +1,411 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Organizador Casitas Ayllu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* App de celular: una tarjeta por idea o tarea, con 4 marcas de color (urgencia, facilidad, rapidez, dinero). Vistas arriba, botón grande para sumar abajo. */
+:root{
+--bg:#EEF0EC;--card:#FFFFFF;--ink:#1B2420;--mute:#5E6963;--line:#D9DED8;--soft:#F3F5F2;
+--brand:#2F5D50;--brandsoft:#DDEAE4;--onbrand:#FFFFFF;
+--ok:#1F7A4A;--oksoft:#E0F2E8;--warn:#9A5B00;--warnsoft:#FBEED6;--bad:#B3261E;--badsoft:#FBE3E0;--neu:#56606A;--neusoft:#E9ECEF;
+--display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;--font:"Figtree","Segoe UI",system-ui,sans-serif;--r:14px;
+color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111614;--card:#1A211E;--ink:#E8EEEA;--mute:#9DAAA3;--line:#2B3430;--soft:#212925;--brand:#86C2AE;--brandsoft:#1E3530;--onbrand:#0C1A15;--ok:#6CCB97;--oksoft:#16301F;--warn:#E9AE55;--warnsoft:#38290F;--bad:#F2857B;--badsoft:#3B1D1A;--neu:#A9B3BC;--neusoft:#262D33;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111614;--card:#1A211E;--ink:#E8EEEA;--mute:#9DAAA3;--line:#2B3430;--soft:#212925;--brand:#86C2AE;--brandsoft:#1E3530;--onbrand:#0C1A15;--ok:#6CCB97;--oksoft:#16301F;--warn:#E9AE55;--warnsoft:#38290F;--bad:#F2857B;--badsoft:#3B1D1A;--neu:#A9B3BC;--neusoft:#262D33;color-scheme:dark}
+*{box-sizing:border-box}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--font);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));-webkit-text-size-adjust:100%}
+main{max-width:640px;margin:0 auto;padding-block:20px calc(100px + env(safe-area-inset-bottom,0px))}
+button,select,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+h1{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--mute);font-size:14px;margin:4px 0 0}
+.status{font-size:13px;color:var(--mute);margin-top:6px;min-height:18px}
+.status.bad{color:var(--bad)}
+
+/* Resumen */
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0 12px}
+.sum div{background:var(--card);border-radius:12px;padding:10px 12px;min-width:0}
+.sum b{display:block;font-family:var(--display);font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.sum span{font-size:13px;color:var(--mute);font-weight:600}
+
+/* Vistas */
+.views{display:flex;gap:6px;background:var(--card);border-radius:12px;padding:4px}
+.views button{flex:1;border:0;background:none;border-radius:9px;padding:9px 4px;font-weight:700;font-size:14px;color:var(--mute);min-width:0}
+.views button.on{background:var(--brand);color:var(--onbrand)}
+.hint{font-size:14px;color:var(--mute);margin:10px 2px 0}
+
+/* Filtros */
+.tools{display:flex;gap:8px;margin-top:12px}
+.search{flex:1;display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:0 12px;min-width:0}
+.search:focus-within{border-color:var(--brand)}
+.search input{border:0;background:none;padding:11px 0;font-size:16px;width:100%;min-width:0;outline:none}
+.fbtn{border:2px solid var(--line);background:var(--card);border-radius:12px;padding:0 14px;font-weight:700;font-size:14px;color:var(--ink);flex:none}
+.fbtn.on{border-color:var(--brand);color:var(--brand)}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.filters label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.04em;min-width:0}
+.filters select{width:100%;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:15px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.clear{grid-column:1/-1;border:0;background:none;color:var(--brand);font-weight:700;text-align:left;padding:4px 0}
+.count{font-size:14px;color:var(--mute);margin:14px 2px 0;font-variant-numeric:tabular-nums}
+
+/* Tarjetas */
+.list{display:grid;gap:12px;margin-top:10px}
+.card{background:var(--card);border-radius:var(--r);padding:14px 14px 12px;min-width:0;border-left:5px solid var(--edge,var(--line))}
+.card.u-alta{--edge:var(--bad)}.card.u-media{--edge:var(--warn)}.card.u-baja{--edge:var(--neu)}
+.card.done{opacity:.72}
+.card.done .ttl{text-decoration:line-through;text-decoration-thickness:1px}
+.meta{font-size:12px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;display:flex;flex-wrap:wrap;gap:4px 10px}
+.ttl{font-size:17px;font-weight:700;line-height:1.3;margin:4px 0 8px;overflow-wrap:anywhere}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--neusoft);color:var(--neu)}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.chip.g{background:var(--oksoft);color:var(--ok)}.chip.y{background:var(--warnsoft);color:var(--warn)}.chip.r{background:var(--badsoft);color:var(--bad)}
+.chip.unset{background:none;border:1px dashed var(--line);color:var(--mute)}
+.chip.unset::before{display:none}
+.note{font-size:15px;color:var(--ink);margin:10px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.note.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.more{border:0;background:none;color:var(--brand);font-weight:700;font-size:14px;padding:2px 0}
+.cost{font-size:14px;color:var(--mute);margin-top:8px}
+.cost b{color:var(--ink);font-weight:600}
+.acts{display:flex;gap:8px;margin-top:12px}
+.acts button{flex:1;border:1px solid var(--line);background:var(--soft);border-radius:10px;padding:9px 6px;font-weight:700;font-size:14px;min-width:0}
+.acts .go{background:var(--brandsoft);border-color:transparent;color:var(--brand)}
+.acts .fin{background:var(--oksoft);border-color:transparent;color:var(--ok)}
+.state{display:inline-block;font-size:12px;font-weight:800;padding:2px 8px;border-radius:6px;background:var(--brandsoft);color:var(--brand);text-transform:uppercase;letter-spacing:.05em}
+
+.empty{background:var(--card);border-radius:var(--r);padding:22px 18px;text-align:center;color:var(--mute)}
+.empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:4px}
+
+/* Botón sumar */
+.add{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;border:0;background:var(--brand);color:var(--onbrand);font-weight:800;font-size:16px;border-radius:999px;padding:14px 26px;box-shadow:0 6px 18px rgb(0 0 0 / .18)}
+
+/* Hoja de edición */
+.sheet{position:fixed;inset:0;z-index:30;background:rgb(0 0 0 / .45);display:flex;align-items:flex-end;justify-content:center}
+.panel{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;border-radius:18px 18px 0 0;padding:18px max(16px,env(safe-area-inset-left,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px))}
+.panel h2{font-family:var(--display);font-size:21px;margin:0 0 12px}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fld>span{font-size:13px;font-weight:700;color:var(--mute);text-transform:uppercase;letter-spacing:.04em}
+.fld input,.fld textarea,.fld select{width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:16px}
+.fld textarea{min-height:90px;resize:vertical}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 13px;font-size:14px;font-weight:700;color:var(--ink)}
+.opts button.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.prow{display:flex;gap:8px;margin-top:6px}
+.prow button{flex:1;border:0;border-radius:12px;padding:13px;font-weight:800;font-size:16px}
+.save{background:var(--brand);color:var(--onbrand)}
+.cancel{background:var(--card);color:var(--ink);border:1px solid var(--line)!important}
+.del{width:100%;margin-top:12px;border:1px solid var(--badsoft);background:none;color:var(--bad);border-radius:12px;padding:11px;font-weight:700}
+.del.arm{background:var(--bad);color:var(--card)}
+.err{color:var(--bad);font-size:14px;font-weight:600;margin:0 0 10px}
+</style>
+
+<main>
+  <header>
+    <h1>Organizador Casitas Ayllu</h1>
+    <p class="sub">Ideas y tareas para el nuevo comienzo · Santa Mónica, Calamuchita</p>
+    <div class="status" id="status">Cargando la lista…</div>
+  </header>
+
+  <section class="sum" aria-label="Resumen">
+    <div><b id="sPend">–</b><span>Pendientes</span></div>
+    <div><b id="sUrg">–</b><span>Urgentes</span></div>
+    <div><b id="sQuick">–</b><span>Rápidas y fáciles</span></div>
+  </section>
+
+  <nav class="views" aria-label="Vistas">
+    <button type="button" data-view="todo" class="on">Para hacer</button>
+    <button type="button" data-view="quick">Rápidas</button>
+    <button type="button" data-view="done">Hechas</button>
+  </nav>
+  <p class="hint" id="hint"></p>
+
+  <div class="tools">
+    <label class="search"><input id="q" type="search" placeholder="Buscar…" aria-label="Buscar"></label>
+    <button type="button" class="fbtn" id="fbtn" aria-expanded="false">Filtros</button>
+  </div>
+  <div class="filters" id="filters" hidden>
+    <label>Urgencia<select id="f-urgencia"></select></label>
+    <label>Facilidad<select id="f-facilidad"></select></label>
+    <label>Rapidez<select id="f-rapidez"></select></label>
+    <label>Dinero<select id="f-dinero"></select></label>
+    <label>Tipo<select id="f-categoria"></select></label>
+    <label>Casita<select id="f-unidad"></select></label>
+    <label>Ordenar por<select id="f-orden">
+      <option value="prio">Prioridad</option>
+      <option value="urgencia">Más urgente</option>
+      <option value="facilidad">Más fácil</option>
+      <option value="rapidez">Más rápido</option>
+      <option value="dinero">Más barato</option>
+      <option value="nuevo">Más nuevo</option>
+    </select></label>
+    <button type="button" class="clear" id="clear">Sacar filtros</button>
+  </div>
+
+  <p class="count" id="count"></p>
+  <div class="list" id="list">
+    <div class="empty"><b>Cargando tus ideas…</b>Acá van a aparecer las tareas con sus marcas de urgencia, facilidad, rapidez y dinero.</div>
+  </div>
+</main>
+
+<button type="button" class="add" id="add">+ Sumar idea</button>
+
+<div class="sheet" id="sheet" hidden>
+  <form class="panel" id="form" novalidate>
+    <h2 id="ftitle">Nueva idea</h2>
+    <p class="err" id="ferr" hidden></p>
+    <label class="fld"><span>Qué hay que hacer</span><input id="i-titulo" maxlength="140" placeholder="Ej: cambiar la flor de la ducha"></label>
+    <div class="fld"><span>Urgencia</span><div class="opts" data-field="urgencia"></div></div>
+    <div class="fld"><span>Facilidad</span><div class="opts" data-field="facilidad"></div></div>
+    <div class="fld"><span>Rapidez</span><div class="opts" data-field="rapidez"></div></div>
+    <div class="fld"><span>Dinero</span><div class="opts" data-field="dinero"></div></div>
+    <div class="fld"><span>Estado</span><div class="opts" data-field="estado"></div></div>
+    <label class="fld"><span>Tipo</span><select id="i-categoria"></select></label>
+    <div class="fld"><span>Casitas (podés marcar varias)</span><div class="opts" data-field="unidades" data-multi="1"></div></div>
+    <label class="fld"><span>Costo aproximado</span><input id="i-costo" maxlength="80" placeholder="Ej: $9.000 a $20.000 cada una"></label>
+    <label class="fld"><span>Notas, cómo hacerlo, dónde comprar</span><textarea id="i-nota" maxlength="3000"></textarea></label>
+    <div class="prow">
+      <button type="button" class="cancel" id="cancel">Cancelar</button>
+      <button type="submit" class="save" id="save">Guardar</button>
+    </div>
+    <button type="button" class="del" id="del" hidden>Borrar esta idea</button>
+  </form>
+</div>
+
+<script>
+const OPT = {
+  urgencia:  [["alta","Urgente","r",3],["media","Pronto","y",2],["baja","Cuando se pueda","",1]],
+  facilidad: [["facil","Fácil","g",3],["media","Media","y",2],["dificil","Difícil","r",1]],
+  rapidez:   [["rapida","Rápido (horas)","g",3],["media","Un día","y",2],["lenta","Varios días","r",1]],
+  dinero:    [["0","Sin costo","g",4],["1","$ Poco","g",3],["2","$$ Medio","y",2],["3","$$$ Mucho","r",1]],
+  estado:    [["pendiente","Pendiente"],["haciendo","Haciendo"],["hecho","Hecha"]],
+  categoria: [["arreglos","Arreglos"],["exterior","Exterior y limpieza"],["decoracion","Decoración"],["redes","Redes y fotos"],["ventas","Ventas y reservas"],["papa","Hablar con papá"],["otro","Otro"]],
+  unidades:  [["1","Casita 1"],["2","Casita 2"],["3","Casita 3"],["4","Casita 4"],["5","Casita 5"],["comun","Espacios comunes"]]
+};
+const DINERO_AYUDA = "$ menos de $20 mil · $$ de $20 a $100 mil · $$$ más de $100 mil";
+const lab = (f,v) => (OPT[f].find(o=>o[0]===v)||[])[1];
+const tone = (f,v) => (OPT[f].find(o=>o[0]===v)||[])[2];
+const pts = (f,v) => (OPT[f].find(o=>o[0]===v)||[])[3]||0;
+
+let db = null, canWrite = true, items = [], view = "todo", editing = null, openNotes = new Set();
+const $ = id => document.getElementById(id);
+
+function setStatus(t, bad){ const s=$("status"); s.textContent=t; s.classList.toggle("bad",!!bad); }
+
+// Prioridad: la urgencia pesa el triple; facilidad, rapidez y dinero suman.
+function prio(it){ return pts("urgencia",it.urgencia)*3 + pts("facilidad",it.facilidad) + pts("rapidez",it.rapidez) + pts("dinero",it.dinero); }
+function isQuick(it){ return it.estado!=="hecho" && it.facilidad==="facil" && it.rapidez==="rapida" && (it.dinero==="0"||it.dinero==="1"); }
+
+/* Filtros */
+function fillSelect(sel, field, allLabel){
+  sel.innerHTML="";
+  const o=document.createElement("option"); o.value=""; o.textContent=allLabel; sel.appendChild(o);
+  OPT[field].forEach(([v,l])=>{ const e=document.createElement("option"); e.value=v; e.textContent=l; sel.appendChild(e); });
+}
+fillSelect($("f-urgencia"),"urgencia","Todas");
+fillSelect($("f-facilidad"),"facilidad","Todas");
+fillSelect($("f-rapidez"),"rapidez","Todas");
+fillSelect($("f-dinero"),"dinero","Todos");
+fillSelect($("f-categoria"),"categoria","Todos");
+fillSelect($("f-unidad"),"unidades","Todas");
+fillSelect($("i-categoria"),"categoria","Sin tipo");
+
+try{ const v=localStorage.getItem("ayllu-view"); if(v) view=v; }catch(e){}
+
+$("fbtn").onclick=()=>{ const f=$("filters"); f.hidden=!f.hidden; $("fbtn").setAttribute("aria-expanded",String(!f.hidden)); };
+["f-urgencia","f-facilidad","f-rapidez","f-dinero","f-categoria","f-unidad","f-orden"].forEach(id=>$(id).addEventListener("change",render));
+$("q").addEventListener("input",render);
+$("clear").onclick=()=>{ ["f-urgencia","f-facilidad","f-rapidez","f-dinero","f-categoria","f-unidad"].forEach(id=>$(id).value=""); $("f-orden").value="prio"; $("q").value=""; render(); };
+document.querySelectorAll(".views button").forEach(b=>b.onclick=()=>{ view=b.dataset.view; try{localStorage.setItem("ayllu-view",view);}catch(e){} render(); });
+
+const HINTS = {
+  todo:"Ordenadas por prioridad: primero lo urgente, y entre lo urgente, lo más fácil, rápido y barato.",
+  quick:"Fáciles, rápidas (horas) y sin costo o con poco dinero. Ideales para un rato libre.",
+  done:"Lo que ya terminaste."
+};
+
+function render(){
+  document.querySelectorAll(".views button").forEach(b=>b.classList.toggle("on",b.dataset.view===view));
+  $("hint").textContent=HINTS[view];
+  const pend=items.filter(i=>i.estado!=="hecho");
+  $("sPend").textContent=pend.length;
+  $("sUrg").textContent=pend.filter(i=>i.urgencia==="alta").length;
+  $("sQuick").textContent=items.filter(isQuick).length;
+
+  const f={urgencia:$("f-urgencia").value,facilidad:$("f-facilidad").value,rapidez:$("f-rapidez").value,dinero:$("f-dinero").value,categoria:$("f-categoria").value};
+  const un=$("f-unidad").value, q=$("q").value.trim().toLowerCase(), ord=$("f-orden").value;
+  const active=Object.values(f).some(Boolean)||un;
+  $("fbtn").classList.toggle("on",!!active);
+
+  let list=items.filter(i=> view==="done" ? i.estado==="hecho" : view==="quick" ? isQuick(i) : i.estado!=="hecho");
+  for(const k in f) if(f[k]) list=list.filter(i=>i[k]===f[k]);
+  if(un) list=list.filter(i=>(i.unidades||[]).includes(un));
+  if(q) list=list.filter(i=>[i.titulo,i.nota,i.costo].join(" ").toLowerCase().includes(q));
+
+  const by = {
+    prio:(a,b)=>prio(b)-prio(a),
+    urgencia:(a,b)=>pts("urgencia",b.urgencia)-pts("urgencia",a.urgencia)||prio(b)-prio(a),
+    facilidad:(a,b)=>pts("facilidad",b.facilidad)-pts("facilidad",a.facilidad)||prio(b)-prio(a),
+    rapidez:(a,b)=>pts("rapidez",b.rapidez)-pts("rapidez",a.rapidez)||prio(b)-prio(a),
+    dinero:(a,b)=>pts("dinero",b.dinero)-pts("dinero",a.dinero)||prio(b)-prio(a),
+    nuevo:(a,b)=>String(b.creada||"").localeCompare(String(a.creada||""))
+  };
+  list.sort(view==="done" ? (a,b)=>String(b.hechaEl||"").localeCompare(String(a.hechaEl||"")) : by[ord]);
+  // Las que están en curso van arriba
+  if(view!=="done") list.sort((a,b)=>(b.estado==="haciendo")-(a.estado==="haciendo"));
+
+  $("count").textContent = list.length===1 ? "1 idea" : list.length+" ideas";
+  const box=$("list"); box.innerHTML="";
+  if(!list.length){
+    const e=document.createElement("div"); e.className="empty";
+    const b=document.createElement("b");
+    b.textContent = !items.length ? "Todavía no hay ideas cargadas" : (q||active) ? "Nada coincide con esos filtros" : view==="done" ? "Todavía no terminaste ninguna" : "No hay nada en esta vista";
+    e.appendChild(b);
+    e.appendChild(document.createTextNode(!items.length ? "Tocá “+ Sumar idea” para anotar la primera." : (q||active) ? "Probá sacando algún filtro." : ""));
+    box.appendChild(e); return;
+  }
+  list.forEach(it=>box.appendChild(card(it)));
+}
+
+function chip(field,val,prefix){
+  const c=document.createElement("span");
+  if(!val){ c.className="chip unset"; c.textContent=prefix+": sin marcar"; return c; }
+  c.className="chip "+(tone(field,val)||"");
+  c.textContent=lab(field,val);
+  c.title=prefix;
+  return c;
+}
+
+function card(it){
+  const c=document.createElement("article");
+  c.className="card u-"+(it.urgencia||"none")+(it.estado==="hecho"?" done":"");
+  const meta=document.createElement("div"); meta.className="meta";
+  if(it.estado==="haciendo"){ const s=document.createElement("span"); s.className="state"; s.textContent="Haciendo"; meta.appendChild(s); }
+  if(it.categoria){ const s=document.createElement("span"); s.textContent=lab("categoria",it.categoria)||it.categoria; meta.appendChild(s); }
+  const us=(it.unidades||[]).map(u=>u==="comun"?"Comunes":"Casita "+u);
+  if(us.length){ const s=document.createElement("span"); s.textContent=us.length===5?"Todas las casitas":us.join(" · "); meta.appendChild(s); }
+  c.appendChild(meta);
+  const t=document.createElement("div"); t.className="ttl"; t.textContent=it.titulo||"(sin título)"; c.appendChild(t);
+  const ch=document.createElement("div"); ch.className="chips";
+  ch.append(chip("urgencia",it.urgencia,"Urgencia"),chip("facilidad",it.facilidad,"Facilidad"),chip("rapidez",it.rapidez,"Rapidez"),chip("dinero",it.dinero,"Dinero"));
+  c.appendChild(ch);
+  if(it.costo){ const p=document.createElement("div"); p.className="cost"; p.append("Costo aprox.: "); const b=document.createElement("b"); b.textContent=it.costo; p.appendChild(b); c.appendChild(p); }
+  if(it.nota){
+    const n=document.createElement("p"); n.className="note"+(openNotes.has(it.id)?"":" clamp"); n.textContent=it.nota; c.appendChild(n);
+    if(it.nota.length>160 || it.nota.split("\n").length>3){
+      const m=document.createElement("button"); m.type="button"; m.className="more";
+      m.textContent=openNotes.has(it.id)?"Ver menos":"Ver cómo hacerlo";
+      m.onclick=()=>{ openNotes.has(it.id)?openNotes.delete(it.id):openNotes.add(it.id); render(); };
+      c.appendChild(m);
+    }
+  }
+  const a=document.createElement("div"); a.className="acts";
+  if(canWrite){
+    if(it.estado==="pendiente"||!it.estado) a.appendChild(btn("Empezar","go",()=>setEstado(it,"haciendo")));
+    if(it.estado!=="hecho") a.appendChild(btn("Hecha ✓","fin",()=>setEstado(it,"hecho")));
+    else a.appendChild(btn("Volver a pendiente","",()=>setEstado(it,"pendiente")));
+    a.appendChild(btn("Editar","",()=>openForm(it)));
+    c.appendChild(a);
+  }
+  return c;
+}
+function btn(t,cls,fn){ const b=document.createElement("button"); b.type="button"; b.textContent=t; if(cls) b.className=cls; b.onclick=fn; return b; }
+
+async function setEstado(it,estado){
+  if(!db) return;
+  const patch={estado,actualizada:new Date().toISOString()};
+  if(estado==="hecho") patch.hechaEl=patch.actualizada;
+  try{ await db.collection("tareas").doc(it.id).update(patch); }
+  catch(e){ setStatus("No se pudo guardar el cambio. Revisá la conexión y probá de nuevo.",true); }
+}
+
+/* Formulario */
+const sel={};
+document.querySelectorAll(".opts").forEach(box=>{
+  const f=box.dataset.field, multi=!!box.dataset.multi;
+  OPT[f].forEach(([v,l])=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=l; b.dataset.v=v;
+    b.onclick=()=>{
+      if(multi){ const s=new Set(sel[f]||[]); s.has(v)?s.delete(v):s.add(v); sel[f]=[...s]; }
+      else sel[f] = sel[f]===v && f!=="estado" ? "" : v;
+      paintOpts();
+    };
+    box.appendChild(b);
+  });
+  if(f==="dinero"){ const h=document.createElement("small"); h.style.cssText="width:100%;color:var(--mute);font-size:13px"; h.textContent=DINERO_AYUDA; box.appendChild(h); }
+});
+function paintOpts(){
+  document.querySelectorAll(".opts").forEach(box=>{
+    const f=box.dataset.field, v=sel[f];
+    box.querySelectorAll("button").forEach(b=>b.classList.toggle("on", Array.isArray(v)?v.includes(b.dataset.v):v===b.dataset.v));
+  });
+}
+let delArmed=false;
+function openForm(it){
+  editing=it||null; delArmed=false;
+  $("ftitle").textContent=it?"Editar idea":"Nueva idea";
+  $("ferr").hidden=true;
+  $("i-titulo").value=it?.titulo||"";
+  $("i-costo").value=it?.costo||"";
+  $("i-nota").value=it?.nota||"";
+  $("i-categoria").value=it?.categoria||"";
+  ["urgencia","facilidad","rapidez","dinero"].forEach(f=>sel[f]=it?.[f]||"");
+  sel.estado=it?.estado||"pendiente";
+  sel.unidades=[...(it?.unidades||[])];
+  paintOpts();
+  const d=$("del"); d.hidden=!it; d.classList.remove("arm"); d.textContent="Borrar esta idea";
+  $("sheet").hidden=false;
+  setTimeout(()=>$("i-titulo").focus(),50);
+}
+function closeForm(){ $("sheet").hidden=true; editing=null; }
+$("add").onclick=()=>openForm(null);
+$("cancel").onclick=closeForm;
+$("sheet").addEventListener("click",e=>{ if(e.target.id==="sheet") closeForm(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("sheet").hidden) closeForm(); });
+
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const titulo=$("i-titulo").value.trim();
+  if(!titulo){ $("ferr").textContent="Escribí qué hay que hacer."; $("ferr").hidden=false; $("i-titulo").focus(); return; }
+  if(!db){ $("ferr").textContent="No hay conexión con la lista guardada. Probá recargar en un rato."; $("ferr").hidden=false; return; }
+  const now=new Date().toISOString();
+  const body={titulo,urgencia:sel.urgencia||"",facilidad:sel.facilidad||"",rapidez:sel.rapidez||"",dinero:sel.dinero||"",
+    estado:sel.estado||"pendiente",categoria:$("i-categoria").value,unidades:sel.unidades||[],costo:$("i-costo").value.trim(),nota:$("i-nota").value.trim(),actualizada:now};
+  if(body.estado==="hecho" && editing?.estado!=="hecho") body.hechaEl=now;
+  $("save").disabled=true;
+  try{
+    if(editing) await db.collection("tareas").doc(editing.id).update(body);
+    else await db.collection("tareas").add({...body,creada:now});
+    closeForm();
+  }catch(err){
+    $("ferr").textContent = err?.code==="invalid_argument" ? "No tenés permiso para editar esta lista." : "No se pudo guardar. Revisá la conexión y probá de nuevo.";
+    $("ferr").hidden=false;
+  }finally{ $("save").disabled=false; }
+});
+$("del").onclick=async()=>{
+  if(!editing||!db) return;
+  if(!delArmed){ delArmed=true; $("del").classList.add("arm"); $("del").textContent="Tocá de nuevo para borrar"; return; }
+  try{ await db.collection("tareas").doc(editing.id).delete(); closeForm(); }
+  catch(e){ $("ferr").textContent="No se pudo borrar. Probá de nuevo."; $("ferr").hidden=false; }
+};
+
+/* Conexión con la lista guardada */
+render();
+(async()=>{
+  db = await claude.use("db");
+  if(!db){ setStatus("No se pudo abrir la lista guardada. Entrá con tu cuenta y recargá.",true);
+    $("list").innerHTML='<div class="empty"><b>Lista no disponible</b>Esta vista no puede leer las ideas guardadas.</div>'; $("add").hidden=true; return; }
+  try{ const u=await claude.use("user"); const w=u?await u.can("data.write"):null; if(w===false){ canWrite=false; $("add").hidden=true; } }catch(e){}
+  const timer=setTimeout(()=>setStatus("La lista tarda en responder. Revisá la conexión.",true),10000);
+  db.collection("tareas").onSnapshot(snap=>{
+    if(!snap.metadata.fromCache){ clearTimeout(timer); }
+    items=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const last=items.map(i=>i.actualizada||"").sort().pop();
+    setStatus(last?"Última actualización: "+new Date(last).toLocaleString("es-AR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"Lista guardada en la nube");
+    render();
+  },err=>{ clearTimeout(timer); setStatus("Se cortó la conexión con la lista. Recargá la página.",true); });
+})();
+</script>
