@@ -177,6 +177,21 @@ h1.ptitle{font:700 42px/1.05 var(--disp);letter-spacing:0;color:var(--acc);margi
 .blk.divider{padding:10px 0;cursor:pointer}
 .blk.divider hr{flex:1;border:0;border-top:1px solid var(--line);margin:0}
 .blk.divider.sel hr{border-top-color:var(--acc)}
+.blk.link{padding:4px 0}
+.lk{display:flex;align-items:center;gap:12px;flex:1;min-width:0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel);text-decoration:none;color:var(--ink)}
+.lk:hover{border-color:var(--acc)}
+.lk .li{width:34px;height:34px;border-radius:8px;background:var(--accsoft);display:grid;place-items:center;flex:none}
+.lk .lt{flex:1;min-width:0}
+.lk b{display:block;font-weight:600;overflow-wrap:anywhere;line-height:1.3}
+.lk small{color:var(--mute);font-size:12.5px}
+.lk .open{color:var(--acc);font-weight:700;font-size:13px;white-space:nowrap}
+.lkedit{flex:none;width:30px;height:30px;border-radius:7px;color:var(--faint);align-self:center}
+.lkedit:hover{background:var(--hover);color:var(--ink)}
+.lkform{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;border:1px dashed var(--acc);border-radius:10px;padding:10px}
+.lkform input{width:100%;border:1px solid var(--line);background:var(--panel);border-radius:7px;padding:8px 10px;font-size:14px}
+.lkform .row2{display:flex;gap:8px;justify-content:flex-end}
+.lkform button{padding:6px 12px;border-radius:7px;font-weight:600;font-size:13px;border:1px solid var(--line)}
+.lkform .ok{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
 .addblk{margin-top:8px;color:var(--faint);font-size:14px;padding:6px 4px;border-radius:6px;display:flex;align-items:center;gap:8px}
 .addblk:hover{background:var(--hover);color:var(--mute)}
 .tip{color:var(--faint);font-size:12px;margin-top:4px}
@@ -302,8 +317,8 @@ const OPT={
 };
 const UNIT_INFO={"1":"hasta 4 personas · cocina a gas","2":"hasta 4 personas · horno y anafe eléctrico","3":"2 personas · cocina a gas","4":"2 personas · horno y anafe eléctrico","5":"2 personas · horno y anafe eléctrico","comun":"parque, mesa con guirnaldas, asadores"};
 const ICONS=["🔧","🚿","🔥","💧","🍂","🚪","🧺","💡","🪴","🛏️","🧹","📸","🎬","📱","💬","🗺️","⭐","👨","🎨","🧾","🔑","🪟","🌙","📌"];
-const BLOCKS=[["p","Texto","Aa","Párrafo común"],["h1","Título 1","H1","Título grande"],["h2","Título 2","H2","Título mediano"],["h3","Título 3","H3","Subtítulo"],["li","Lista","•","Lista con viñetas"],["ol","Lista numerada","1.","Pasos en orden"],["todo","Checklist","☐","Casillas para tildar"],["quote","Cita","❝","Texto destacado al costado"],["callout","Destacado","💡","Recuadro de aviso"],["divider","Separador","—","Línea divisoria"]];
-const PH={p:"Escribí algo, o “/” para comandos",h1:"Título 1",h2:"Título 2",h3:"Título 3",li:"Elemento",ol:"Paso",todo:"Tarea",quote:"Cita",callout:"Algo importante"};
+const BLOCKS=[["p","Texto","Aa","Párrafo común"],["h1","Título 1","H1","Título grande"],["h2","Título 2","H2","Título mediano"],["h3","Título 3","H3","Subtítulo"],["li","Lista","•","Lista con viñetas"],["ol","Lista numerada","1.","Pasos en orden"],["todo","Checklist","☐","Casillas para tildar"],["quote","Cita","❝","Texto destacado al costado"],["callout","Destacado","💡","Recuadro de aviso"],["divider","Separador","—","Línea divisoria"],["link","Enlace","🔗","Link a un repuesto, tienda o página"]];
+const PH={link:"",p:"Escribí algo, o “/” para comandos",h1:"Título 1",h2:"Título 2",h3:"Título 3",li:"Elemento",ol:"Paso",todo:"Tarea",quote:"Cita",callout:"Algo importante"};
 const find=(f,v)=>OPT[f].find(o=>o[0]===v);
 const lab=(f,v)=>(find(f,v)||[])[1];
 const tone=(f,v)=>(find(f,v)||[])[2]||"";
@@ -387,6 +402,8 @@ function visible(){
 function pillsFor(it,short){
   const out=[];
   if(it.estado==="haciendo")out.push(el("span","pill a","Haciendo"));
+  const nl=(Array.isArray(it.bloques)?it.bloques:[]).filter(b=>b.t==="link"&&b.u).length;
+  if(nl&&short){const p=el("span","pill","🔗 "+nl);p.title=nl===1?"1 link de compra u opción":nl+" links de compra u opciones";out.push(p);}
   [["urgencia","Urgencia"],["facilidad","Facilidad"],["rapidez","Rapidez"],["dinero","Dinero"]].forEach(([k,n])=>{
     if(it[k]){const p=el("span","pill "+tone(k,it[k]),lab(k,it[k]));p.title=n;out.push(p);}
     else if(!short){out.push(el("span","pill e",n+"?"));}
@@ -464,7 +481,7 @@ function queueSave(){
 async function flush(){
   clearTimeout(saveT);if(!pendingSave||!openId||!draft)return;
   pendingSave=false;$("saved").textContent="Guardando…";
-  try{await write(openId,{titulo:draft.titulo,bloques:draft.bloques});$("saved").textContent="Guardado";}
+  try{await write(openId,{titulo:draft.titulo,bloques:draft.bloques.map(({_e,...r})=>r)});$("saved").textContent="Guardado";}
   catch(e){pendingSave=true;$("saved").textContent="No se guardó · revisá la conexión";}
 }
 
@@ -561,6 +578,27 @@ function renderEditor(focusI,pos){
   draft.bloques.forEach((b,i)=>{
     n=b.t==="ol"?n+1:0;
     const w=el("div","blk "+b.t+(b.t==="todo"&&b.c?" ck":"")+(selDivider===i?" sel":""));w.dataset.i=i;
+    if(b.t==="link"){
+      w.classList.add("link");
+      if(b._e&&canWrite){
+        const f=el("div","lkform");
+        const t=el("input");t.placeholder="Qué es (ej: Flor de ducha Peirano · Easy · $13.600)";t.value=b.x||"";
+        const u=el("input");u.placeholder="Pegá el link (https://…)";u.value=b.u||"";u.inputMode="url";
+        const r2=el("div","row2");const del=el("button",null,"Quitar");del.type="button";const ok=el("button","ok","Listo");ok.type="button";
+        const done=()=>{let url=u.value.trim();if(url&&!/^https?:\/\//i.test(url))url="https://"+url;b.u=url;b.x=t.value.trim();delete b._e;if(!b.u&&!b.x)draft.bloques.splice(i,1);queueSave();renderEditor();};
+        ok.onclick=done;del.onclick=()=>{draft.bloques.splice(i,1);queueSave();renderEditor();};
+        [t,u].forEach(x=>x.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();done();}}));
+        r2.append(del,ok);f.append(t,u,r2);w.append(f);ed.append(w);
+        if(focusI===i)setTimeout(()=>t.focus(),30);
+        return;
+      }
+      let host="";try{host=new URL(b.u).hostname.replace(/^www\./,"");}catch(e){}
+      const a=el("a","lk");if(/^https?:\/\//i.test(b.u||""))a.href=b.u;a.target="_blank";a.rel="noopener noreferrer";
+      const tt=el("span","lt");tt.append(el("b",null,b.x||host||"Link"),el("small",null,host||"Link sin dirección"));
+      a.append(el("span","li","🔗"),tt,el("span","open","Abrir ↗"));w.append(a);
+      if(canWrite){const eb=el("button","lkedit","✎");eb.type="button";eb.setAttribute("aria-label","Editar link");eb.onclick=()=>{b._e=true;renderEditor(i);};w.append(eb);}
+      ed.append(w);return;
+    }
     if(b.t==="divider"){
       w.append(el("hr"));w.tabIndex=0;
       w.onclick=()=>{selDivider=i;lastFocus=i;renderEditor();ed.children[i].focus();};
@@ -610,6 +648,7 @@ function onKey(e,i,tx){
     if(i>0){
       e.preventDefault();const prev=draft.bloques[i-1];
       if(prev.t==="divider"){draft.bloques.splice(i-1,1);queueSave();renderEditor(i-1,0);return;}
+      if(prev.t==="link"){if(!tx.textContent){draft.bloques.splice(i,1);queueSave();renderEditor();}return;}
       const L=(prev.x||"").length;prev.x=(prev.x||"")+tx.textContent;draft.bloques.splice(i,1);queueSave();renderEditor(i-1,L);return;
     }
   }
@@ -617,6 +656,7 @@ function onKey(e,i,tx){
   if(e.key==="ArrowDown"&&caretOffset(tx)===tx.textContent.length&&i<draft.bloques.length-1){const nx=$("editor").children[i+1].querySelector(".tx");if(nx){e.preventDefault();setCaret(nx,0);}}
 }
 function setType(i,ty){
+  if(ty==="link"){const b=draft.bloques[i];if(!b)return;const blank=!(b.x||"").trim()&&b.t!=="divider";const nb={t:"link",x:"",u:"",_e:true};if(blank)draft.bloques[i]=nb;else{draft.bloques.splice(i+1,0,nb);i=i+1;}renderEditor(i);return;}
   const b=draft.bloques[i];if(!b)return;
   if(ty==="divider"){b.t="divider";b.x="";if(!draft.bloques[i+1]||draft.bloques[i+1].t==="divider")draft.bloques.splice(i+1,0,{t:"p",x:""});queueSave();renderEditor(i+1,0);return;}
   b.t=ty;if(ty==="todo")b.c=!!b.c;else delete b.c;queueSave();renderEditor(i,1e9);
@@ -676,7 +716,7 @@ render();
         if(!ci)renderProps(it);
         // si otro (o Claude) cambió el texto y acá no hay cambios sin guardar, se actualiza
         const editing=$("peek").contains(document.activeElement)&&document.activeElement.isContentEditable;
-        if(!pendingSave&&!editing){const nb=toBlocks(it);if(JSON.stringify(nb)!==JSON.stringify(draft.bloques)){draft.bloques=nb;renderEditor();}
+        if(!pendingSave&&!editing&&!draft.bloques.some(b=>b._e)){const nb=toBlocks(it);if(JSON.stringify(nb)!==JSON.stringify(draft.bloques)){draft.bloques=nb;renderEditor();}
           if((it.titulo||"")!==draft.titulo){draft.titulo=it.titulo||"";$("ititle").textContent=draft.titulo;}}
       }
     }
