@@ -94,3 +94,22 @@ Requisitos: cómoda en celular y compu. Empezar por lo más simple (módulos 1 y
 - Si ya hay perfil en Google Maps.
 - Reservas aproximadas de temporadas anteriores.
 - Capturas del Instagram.
+
+## Identidad visual (sacada del Instagram, 20/11/2026)
+- **Logo:** una "A" dentro de un rosetón con detalles, en color óxido. Wordmark "casitas" chiquito arriba de "Ayllu".
+- **Colores de marca:**
+  - Óxido o terracota del logo: #9B3B22
+  - Vino o bordó (flyers de octubre): #5C1C2E
+  - Crema de las franjas de contacto: #F5EFE7
+  - Madera de la pérgola y los sillones: #9A5A2E
+  - Verde del parque: #4D6B3A
+- **Letras:** serif elegante para títulos y mayúsculas espaciadas ("TU LUGAR PARA / RELAJARTE Y DISFRUTAR").
+- **Mejores fotos:** pérgola de noche con farol de mimbre, sillones de madera sobre piedra, dormitorio con lámparas cálidas y toallas enrolladas, cartel "casitas Ayllu" con silla de madera.
+
+## Datos del Instagram
+- 21 publicaciones, 951 seguidores.
+- Bio: "Complejo de Casitas en Santa Rosa de Calamuchita, donde podrás apreciar la naturaleza y la paz." + teléfono + botón de WhatsApp.
+- Dirección que se usa: Fader y Ojeda, Santa Mónica.
+- Tarifas publicadas en marzo 2026: casitas para 4 a $60.000 y para 2 a $40.000. En finde largo, $80.000 y $60.000.
+- Se usaron descuentos: 15% en fechas libres de febrero y 25% en los últimos días de febrero.
+- Las publicaciones son casi todas flyers con mucho texto y estilos distintos entre sí (vino, óxido, crema, letra cursiva). Hay una con personas generadas por IA.
