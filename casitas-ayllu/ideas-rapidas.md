@@ -2,6 +2,8 @@
 
 Acá anotás todo lo que se te ocurra, sin ordenar. Después lo acomodamos juntos.
 
+> El plan ordenado por urgencia y dificultad, con instructivos y dónde comprar, está en `plan-mejoras.md`.
+
 ## Ideas sueltas
 - Llaveros para las puertas
 - Alfombras de entrada
@@ -19,7 +21,9 @@ Acá anotás todo lo que se te ocurra, sin ordenar. Después lo acomodamos junto
 - 
 
 ## Para hablar con papá
-- 
+- Presupuesto de plomero y mampara
+- ¿Una "casita premium" de prueba?
+- Estilo y colores del complejo
 
 ## Para probar en la temporada
 - 
