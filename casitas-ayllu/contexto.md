@@ -9,6 +9,8 @@ Instagram: [@casitasayllu](https://www.instagram.com/casitasayllu)
 - **Nada de tablas** (en el celular se cortan): usar listas.
 - Español rioplatense, claro y directo.
 - Mostrarle al papá lo que se arme antes de aplicarlo: es su negocio.
+- **Antes de cambiar el organizador (diseño o funciones), mandar una propuesta o vista previa y esperar su OK.** Si un pedido es ambiguo, preguntar o mostrar opciones en vez de suponer.
+- Para diseño, usar la guía de diseño visual (skill de diseño) y mostrar opciones dibujadas.
 
 ## Quién lleva esto
 - **Tomás Fernández**, Córdoba capital. Ideó el "nuevo comienzo" del complejo.
